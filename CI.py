@@ -79,9 +79,5 @@ roc_auc_std 				= np.sqrt(roc_auc_variance / (count - 1))
 roc_auc_left 				= roc_auc_mean - 1.96 * (roc_auc_std / math.sqrt(count))
 roc_auc_right 				= roc_auc_mean + 1.96 * (roc_auc_std / math.sqrt(count))
 
-for i in range(num_classes):
-	print("AUC confidence interval class {0}: {1:0.5f} {2:0.5f} {3:0.5f}".format(classes_dic.get(i), roc_auc_left[i], roc_auc_mean[i], roc_auc_right[i]))
-
-print("AUC interval:\n {0}".format(1.96 * (roc_auc_std / math.sqrt(count))))
-
-print("AUC mean: {0:0.5f}".format(np.mean(roc_auc_mean)))
+for i in range(num_classes+1):
+	print("AUC confidence interval class {0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{1:0.5f})".format(classes_dic.get(i), roc_auc_left[i], roc_auc_mean[i], roc_auc_right[i], 1.96 * (roc_auc_std[i] / math.sqrt(count))))
