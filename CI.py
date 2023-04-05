@@ -15,6 +15,7 @@
 
 ## Import the libraries
 import numpy as np
+import pandas as pd
 import argparse
 import pickle
 import math
@@ -23,12 +24,7 @@ import fnmatch
 from sklearn.metrics import auc, roc_curve
 
 
-## Parse the arguments
-parser 						= argparse.ArgumentParser()
-
-parser.add_argument('--path', type=str, default="./", help='Path to the directory with the results to compute (default: ./)')
-
-args 						= parser.parse_args()
+paths 						= ["D1", "D1-D2", "D1-V1", "D1-V2","D1-V3", "D1-V4", "D1-V5", "D1-V6", "8leads", "12leads", "12leads_WithoutDataAugmentation"]
 
 num_classes 				= 20
 first_iteration 			= True
@@ -39,45 +35,62 @@ classes_dic			 		= {0: "NORM", 1: "STTC", 2: "AMI", 3: "IMI", 4: "LAFB/LPFB", \
 				               15: "WPW", 16: "LAO/LAE", 17: "ILBBB", 18: "RAO/RAE", 19: "LMI", \
 				               20: "Average"}
 
-roc_auc_mean 				= np.zeros(num_classes+1)
-roc_auc_variance 			= np.zeros(num_classes+1)
+global_roc_auc_mean 		= np.zeros((num_classes+1, len(paths)))
+global_roc_auc_left 		= np.zeros((num_classes+1, len(paths)))
+global_roc_auc_right 		= np.zeros((num_classes+1, len(paths)))
+j							= 0
+for path in paths:
+	roc_auc_mean 				= np.zeros(num_classes+1)
+	roc_auc_variance 			= np.zeros(num_classes+1)
 
-runs 						= len(fnmatch.filter(os.listdir(args.path), '20Classes_*')) + 1
+	runs 						= len(fnmatch.filter(os.listdir(path + "/"), '20Classes_*')) + 1
 
-for count in range(1, runs):
-	roc_auc_local 			= np.zeros(num_classes+1)
+	for count in range(1, runs):
+		roc_auc_local 			= np.zeros(num_classes+1)
 
-	#  Load the files
-	with open(args.path + '20Classes_' + str(count-1) + '/y_pred', 'rb') as y_pred_file:
-		y_pred 				= pickle.load(y_pred_file)
+		#  Load the files
+		with open(path + '/20Classes_' + str(count-1) + '/y_pred', 'rb') as y_pred_file:
+			y_pred 				= pickle.load(y_pred_file)
 
-	with open(args.path + '20Classes_' + str(count-1) + '/y_test', 'rb') as y_test_file:
-		y_test 				= pickle.load(y_test_file)
+		with open(path + '/20Classes_' + str(count-1) + '/y_test', 'rb') as y_test_file:
+			y_test 				= pickle.load(y_test_file)
 
-	#  Plot ROC curves
-	fpr 					= dict()
-	tpr 					= dict()
+		#  Plot ROC curves
+		fpr 					= dict()
+		tpr 					= dict()
 
-	for i in range(num_classes):
-	  	fpr[i], tpr[i], _ 	= roc_curve(y_test[:, i], y_pred[:, i])
-	  	roc_auc_local[i] 	= auc(fpr[i], tpr[i])
+		for i in range(num_classes):
+		  	fpr[i], tpr[i], _ 	= roc_curve(y_test[:, i], y_pred[:, i])
+		  	roc_auc_local[i] 	= auc(fpr[i], tpr[i])
 
-	roc_auc_local[20] 		= np.mean(roc_auc_local[0:20])
+		roc_auc_local[20] 		= np.mean(roc_auc_local[0:20])
 
-	y_pred 					= np.where(y_pred > 0.5, 1, 0)
+		y_pred 					= np.where(y_pred > 0.5, 1, 0)
 
-	if first_iteration:
-		roc_auc_mean 		= roc_auc_local
-		first_iteration 	= False
-	else:
-		roc_auc_mean 		= roc_auc_mean + (roc_auc_local - roc_auc_mean) / count
-		roc_auc_variance 	= roc_auc_variance + ((count - 1) / count) * (roc_auc_local - roc_auc_mean) ** 2
+		if first_iteration:
+			roc_auc_mean 		= roc_auc_local
+			first_iteration 	= False
+		else:
+			roc_auc_mean 		= roc_auc_mean + (roc_auc_local - roc_auc_mean) / count
+			roc_auc_variance 	= roc_auc_variance + ((count - 1) / count) * (roc_auc_local - roc_auc_mean) ** 2
 
 
-roc_auc_std 				= np.sqrt(roc_auc_variance / (count - 1))
+	roc_auc_std 				= np.sqrt(roc_auc_variance / (count - 1))
 
-roc_auc_left 				= roc_auc_mean - 1.96 * (roc_auc_std / math.sqrt(count))
-roc_auc_right 				= roc_auc_mean + 1.96 * (roc_auc_std / math.sqrt(count))
+	roc_auc_left 				= roc_auc_mean - 1.96 * (roc_auc_std / math.sqrt(count))
+	roc_auc_right 				= roc_auc_mean + 1.96 * (roc_auc_std / math.sqrt(count))
 
-for i in range(num_classes+1):
-	print("AUC confidence interval class {0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{1:0.5f})".format(classes_dic.get(i), roc_auc_left[i], roc_auc_mean[i], roc_auc_right[i], 1.96 * (roc_auc_std[i] / math.sqrt(count))))
+	print(path + ":")
+	for i in range(num_classes+1):
+		print("AUC confidence interval class {0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{4:0.5f})".format(classes_dic.get(i), roc_auc_left[i]*100, roc_auc_mean[i]*100, roc_auc_right[i]*100, (1.96 * (roc_auc_std[i] / math.sqrt(count)))*100))
+
+	global_roc_auc_mean[:, j]	= roc_auc_mean * 100
+	global_roc_auc_left[:, j]	= roc_auc_left * 100
+	global_roc_auc_right[:, j]	= roc_auc_right * 100
+
+	j 							= j + 1
+
+
+pd.DataFrame(global_roc_auc_mean, index=classes_dic.values(), columns=paths).to_csv("mean.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_left, index=classes_dic.values(), columns=paths).to_csv("left.csv", float_format='%.3f')
+pd.DataFrame(global_roc_auc_right, index=classes_dic.values(), columns=paths).to_csv("right.csv", float_format='%.3f')

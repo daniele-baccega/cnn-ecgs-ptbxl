@@ -3,10 +3,6 @@
 # Reproduce the paper results
 FrontiersConfigurations/D1.sh
 FrontiersConfigurations/D1-D2.sh
-FrontiersConfigurations/D1-D2.sh
-FrontiersConfigurations/D1-AVR.sh
-FrontiersConfigurations/D1-AVL.sh
-FrontiersConfigurations/D1-AVF.sh
 FrontiersConfigurations/D1-V1.sh
 FrontiersConfigurations/D1-V2.sh
 FrontiersConfigurations/D1-V3.sh
