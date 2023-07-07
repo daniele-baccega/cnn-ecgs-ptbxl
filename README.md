@@ -13,6 +13,9 @@ The perspective of single-lead ECGs diagnoses on wearable devices would be game-
 
 # HOW TO REPRODUCE
 
+```
+./reproduce.sh
+```
 
 # REFERENCES
 [1] LeCun, Yann, et al. "Gradient-based learning applied to document recognition." Proceedings of the IEEE 86.11 (1998): 2278-2324.

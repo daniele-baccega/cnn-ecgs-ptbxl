@@ -151,12 +151,12 @@ roc_auc 														= dict()
 roc_df 															= pd.DataFrame(columns=['fpr', 'tpr', 'type'])
 
 for i in range(num_classes_iterations):
-  	fpr[i], tpr[i], _ 							= roc_curve(y_test[:, i] if args.num_classes != 2 else y_test, y_pred[:, i] if args.num_classes != 2 else y_pred)
-  	roc_auc[i] 											= auc(fpr[i], tpr[i])
-  	print("AUC class {0}: {1:0.3f}".format(classes_dic[i], roc_auc[i]))
+		fpr[i], tpr[i], _ 							= roc_curve(y_test[:, i] if args.num_classes != 2 else y_test, y_pred[:, i] if args.num_classes != 2 else y_pred)
+		roc_auc[i] 											= auc(fpr[i], tpr[i])
+		print("AUC class {0}: {1:0.3f}".format(classes_dic[i], roc_auc[i]))
 
- if args.num_classes == 24:
- 	print("Average AUC 5 classes:", np.sum(roc_auc[0:5]) / 5)
+if args.num_classes == 24:
+	print("Average AUC 5 classes:", np.sum(roc_auc[0:5]) / 5)
 	print("Average AUC 20 classes:", (roc_auc[0] + np.sum(roc_auc[5:24])) / 20)
 
 roc_df['fpr'] 											= np.concatenate(list(fpr.values()), axis=0)
