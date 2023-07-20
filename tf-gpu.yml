@@ -116,6 +116,7 @@ dependencies:
   - palettable=3.3.0=py_0
   - patsy=0.5.3=pyhd8ed1ab_0
   - pcre=8.45=h295c915_0
+  - pip=23.1.2
   - plotnine=0.10.1=pyhd8ed1ab_1
   - ply=3.11=py39h06a4308_0
   - protobuf=3.20.1=py39h295c915_0
@@ -215,4 +216,3 @@ dependencies:
     - tensorflow-determinism==0.3.0
     - traits==6.3.2
     - wfdb==4.0.0
-prefix: /home/dbaccega/anaconda3/envs/tf-gpu
