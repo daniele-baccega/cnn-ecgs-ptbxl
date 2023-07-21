@@ -101,7 +101,7 @@ setup_seed(args.seed)
 
 ## Visualize the data
 #  Initialize some variables
-path                        = '../' + args.dataset + '/'
+path                        = args.dataset + '/'
 log_file                    = 'tensorflow.log'
 sampling_rate               = 100
 resolution                  = "lr" if sampling_rate == 100 else "hr"

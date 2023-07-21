@@ -49,7 +49,7 @@
 
 SEED="0"
 NUM_CLASSES="2"
-DATASET="ptb-xl-a-large-publicly-available-electrocardiography-dataset-1.0.1"
+DATASET="/home/docker/cnn-ecg/ptb-xl-a-large-publicly-available-electrocardiography-dataset-1.0.1"
 EPOCHS="200"
 BATCH_SIZE="32"
 INIT_LEARNING_RATE="1e-2"
@@ -72,7 +72,7 @@ NUM_FILTERS_FIRST_CONV="1"
 ONE_D_MODEL=""
 JITTER_STD="0.01 0.1"
 
-DIR_NAME="${NUM_CLASSES}Classes_$(date +%s)"
+DIR_NAME="/home/docker/cnn-ecg/${NUM_CLASSES}Classes_$(date +%s)"
 USE_SAVED_DATA=0
 
 while [[ $# -gt 0 ]]; do
@@ -265,28 +265,28 @@ done
 
 set -- "${POSITIONAL_ARGS[@]}" # restore positional parameters
 
-if [ $USE_SAVED_DATA -eq 0 ] && [ -d "data/${NUM_CLASSES}Classes" ]; then
-	rm -r "data/${NUM_CLASSES}Classes"
+if [ $USE_SAVED_DATA -eq 0 ] && [ -d "/home/docker/cnn-ecg/data/${NUM_CLASSES}Classes" ]; then
+	rm -r "/home/docker/cnn-ecg/data/${NUM_CLASSES}Classes"
 fi
 
 if [ $NUM_CLASSES -eq 2 ] || [ $NUM_CLASSES -eq 5 ] || [ $NUM_CLASSES -eq 20 ] || [ $NUM_CLASSES -eq 24 ]; then
 	if ! [ -d "$DIR_NAME" ]; then
 		mkdir $DIR_NAME
 
-		cp main.py $DIR_NAME
-		cp model.py $DIR_NAME
-		cp utils.py $DIR_NAME
-		cp datagenerator.py $DIR_NAME
+		cp /home/docker/cnn-ecg/main.py $DIR_NAME
+		cp /home/docker/cnn-ecg/model.py $DIR_NAME
+		cp /home/docker/cnn-ecg/utils.py $DIR_NAME
+		cp /home/docker/cnn-ecg/datagenerator.py $DIR_NAME
 
-    if [ ! -d "data" ]; then
-      mkdir "data"
+    if [ ! -d "/home/docker/cnn-ecg/data" ]; then
+      mkdir "/home/docker/cnn-ecg/data"
     fi
 
 		cd $DIR_NAME
 
-    mkdir checkpoints
+    mkdir $DIR_NAME/checkpoints
 		
-		python3 main.py --seed $SEED --num_classes $NUM_CLASSES --dataset $DATASET --epochs $EPOCHS --batch_size $BATCH_SIZE --init_learning_rate $INIT_LEARNING_RATE \
+		python3 $DIR_NAME/main.py --seed $SEED --num_classes $NUM_CLASSES --dataset $DATASET --epochs $EPOCHS --batch_size $BATCH_SIZE --init_learning_rate $INIT_LEARNING_RATE \
                     --final_learning_rate $FINAL_LEARNING_RATE --leads $LEADS --crop_window $CROP_WINDOW --padding $PADDING --time_scale $TIME_SCALE \
                     --amplitude_scale $AMPLITUDE_SCALE --optimizer $OPTIMIZER --momentum $MOMENTUM --dropout $DROPOUT --pool_sizes $POOL_SIZES \
                     --dilation_factors $DILATION_FACTORS --kernel_size_last_conv $KERNEL_SIZE_LAST_CONV --out_act_fun_2_classes $OUT_ACT_FUN_2_CLASSES \

@@ -1,7 +1,7 @@
 '''
 	Deep learning project (100Hz)
 
-	process_results.py
+	CI.py
 
 	Authors: Daniele Baccega, Andrea Saglietto
 	Topic: Deep Learning applied to ECGs
@@ -24,7 +24,7 @@ import fnmatch
 from sklearn.metrics import auc, roc_curve
 
 
-paths 						= ["D1", "D1-D2", "D1-V1", "D1-V2","D1-V3", "D1-V4", "D1-V5", "D1-V6", "8leads", "12leads", "12leads_WithoutDataAugmentation"]
+paths 						= ["TrainedModels/D1", "TrainedModels/D1-D2", "TrainedModels/D1-V1", "TrainedModels/D1-V2","TrainedModels/D1-V3", "TrainedModels/D1-V4", "TrainedModels/D1-V5", "TrainedModels/D1-V6", "TrainedModels/8leads", "TrainedModels/12leads", "TrainedModels/12leads_WithoutDataAugmentation"]
 
 num_classes 				= 20
 first_iteration 			= True
