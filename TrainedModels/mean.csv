@@ -1,4 +1,4 @@
-,D1,D1-D2,D1-V1,D1-V2,D1-V3,D1-V4,D1-V5,D1-V6,8leads,12leads,12leads_WithoutDataAugmentation
+,TrainedModels/D1,TrainedModels/D1-D2,TrainedModels/D1-V1,TrainedModels/D1-V2,TrainedModels/D1-V3,TrainedModels/D1-V4,TrainedModels/D1-V5,TrainedModels/D1-V6,TrainedModels/8leads,TrainedModels/12leads,TrainedModels/12leads_WithoutDataAugmentation
 NORM,89.76,93.95,92.00,91.91,92.23,92.90,93.07,92.79,96.06,96.07,96.06
 STTC,80.73,84.81,81.97,84.52,85.87,87.53,88.29,86.53,90.11,90.58,89.60
 AMI,83.18,85.67,90.29,94.94,94.16,90.17,86.26,86.35,96.70,96.72,96.21

@@ -24,7 +24,10 @@ import fnmatch
 from sklearn.metrics import auc, roc_curve
 
 
-paths 						= ["TrainedModels/D1", "TrainedModels/D1-D2", "TrainedModels/D1-V1", "TrainedModels/D1-V2","TrainedModels/D1-V3", "TrainedModels/D1-V4", "TrainedModels/D1-V5", "TrainedModels/D1-V6", "TrainedModels/8leads", "TrainedModels/12leads", "TrainedModels/12leads_WithoutDataAugmentation"]
+paths 						= ["TrainedModels/D1", "TrainedModels/D1-D2", "TrainedModels/D1-V1",
+							   "TrainedModels/D1-V2","TrainedModels/D1-V3", "TrainedModels/D1-V4",
+							   "TrainedModels/D1-V5", "TrainedModels/D1-V6", "TrainedModels/8leads",
+							   "TrainedModels/12leads", "TrainedModels/12leads_WithoutDataAugmentation"]
 
 num_classes 				= 20
 first_iteration 			= True
@@ -91,6 +94,6 @@ for path in paths:
 	j 							= j + 1
 
 
-pd.DataFrame(global_roc_auc_mean, index=classes_dic.values(), columns=paths).to_csv("mean.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_left, index=classes_dic.values(), columns=paths).to_csv("left.csv", float_format='%.3f')
-pd.DataFrame(global_roc_auc_right, index=classes_dic.values(), columns=paths).to_csv("right.csv", float_format='%.3f')
+pd.DataFrame(global_roc_auc_mean, index=classes_dic.values(), columns=paths).to_csv("TrainedModels/mean.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_left, index=classes_dic.values(), columns=paths).to_csv("TrainedModels/left.csv", float_format='%.3f')
+pd.DataFrame(global_roc_auc_right, index=classes_dic.values(), columns=paths).to_csv("TrainedModels/right.csv", float_format='%.3f')

@@ -83,9 +83,9 @@ def get_model_2D(init_lr, leads, num_classes, time_length, optimizer, momentum, 
 
    # Specify the loss, optimizer, and metrics with `compile()`.
    model.compile(
-      loss = BinaryCrossentropy(),
-      optimizer = opt,
-      metrics = [keras.metrics.BinaryAccuracy()]
+      loss              = BinaryCrossentropy(),
+      optimizer         = opt,
+      metrics           = [keras.metrics.BinaryAccuracy()]
    )
 
    model.summary()
@@ -126,9 +126,9 @@ def get_model_2D_different_filters(init_lr, leads, num_classes, time_length, opt
 
    # Specify the loss, optimizer, and metrics with `compile()`.
    model.compile(
-      loss = BinaryCrossentropy(),
-      optimizer = opt,
-      metrics = [keras.metrics.BinaryAccuracy()]
+      loss              = BinaryCrossentropy(),
+      optimizer         = opt,
+      metrics           = [keras.metrics.BinaryAccuracy()]
    )
 
    model.summary()
@@ -233,9 +233,9 @@ def get_model_1D(init_lr, leads, num_classes, time_length, optimizer, momentum, 
 
    # Specify the loss, optimizer, and metrics with `compile()`.
    model.compile(
-      loss = BinaryCrossentropy(),
-      optimizer = opt,
-      metrics = [keras.metrics.BinaryAccuracy()]
+      loss              = BinaryCrossentropy(),
+      optimizer         = opt,
+      metrics           = [keras.metrics.BinaryAccuracy()]
    )
 
    model.summary()
