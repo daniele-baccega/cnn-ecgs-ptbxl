@@ -16,9 +16,6 @@
 '''
 
 ## Import the libraries
-import tensorflow
-import numpy as np
-from tensorflow import keras
 from keras import Input, Model
 from keras.layers import Dense, Conv2D, MaxPooling2D, SpatialDropout2D, BatchNormalization, Activation, LeakyReLU, Flatten
 from keras.losses import BinaryCrossentropy
@@ -85,7 +82,7 @@ def get_model_2D(init_lr, leads, num_classes, time_length, optimizer, momentum, 
    model.compile(
       loss              = BinaryCrossentropy(),
       optimizer         = opt,
-      metrics           = [keras.metrics.BinaryAccuracy()]
+      metrics           = [BinaryAccuracy()]
    )
 
    model.summary()
@@ -128,7 +125,7 @@ def get_model_2D_different_filters(init_lr, leads, num_classes, time_length, opt
    model.compile(
       loss              = BinaryCrossentropy(),
       optimizer         = opt,
-      metrics           = [keras.metrics.BinaryAccuracy()]
+      metrics           = [BinaryAccuracy()]
    )
 
    model.summary()
@@ -235,7 +232,7 @@ def get_model_1D(init_lr, leads, num_classes, time_length, optimizer, momentum, 
    model.compile(
       loss              = BinaryCrossentropy(),
       optimizer         = opt,
-      metrics           = [keras.metrics.BinaryAccuracy()]
+      metrics           = [BinaryAccuracy()]
    )
 
    model.summary()

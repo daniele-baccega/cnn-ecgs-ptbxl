@@ -27,7 +27,7 @@ from utils import interp1d
 
 
 ## Data generator
-def dataGenerator(num_classes, output_act_fun, means, stds, sample_weights, data, labels, batchSize=32, one_d_model=False, rpeak=False, different_filters=False, save_test=False, cropLength=344, padding=0, jitter=[0, 0], multiply_amplitude=[1, 1], new_scale=[1, 1], nSamples=0):
+def dataGenerator(sampling_rate, num_classes, output_act_fun, means, stds, sample_weights, data, labels, batchSize=32, one_d_model=False, rpeak=False, different_filters=False, save_test=False, cropLength=344, padding=0, jitter=[0, 0], multiply_amplitude=[1, 1], new_scale=[1, 1], nSamples=0):
   test_data_dir                   = 'test_data'
   i                               = 0
 

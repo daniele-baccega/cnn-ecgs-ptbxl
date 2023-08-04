@@ -19,17 +19,13 @@
 import wfdb
 import ast
 import os
-import pickle
 import random
 import argparse
 import numpy as np
 import pandas as pd
 import seaborn as sns
-import matplotlib.cm as cm
 import matplotlib.pyplot as plt
 import tensorflow
-import tensorflow.keras.backend as K
-from tensorflow import keras
 
 
 ## Utility functions (training)

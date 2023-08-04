@@ -7,4 +7,4 @@ if [[ ! -d ptb-xl-a-large-publicly-available-electrocardiography-dataset-1.0.1 ]
 fi
 
 docker build -t danielebaccega/reproduce-cnn-ecg .
-docker run -it --user $UID:$UID -v $(pwd):/home/docker/cnn-ecg danielebaccega/reproduce-cnn-ecg /usr/bin/bash -c "/home/docker/cnn-ecg/run_configurations.sh"
+docker run -it --user $UID:$UID --rm -v $(pwd):/home/docker/cnn-ecg danielebaccega/reproduce-cnn-ecg /usr/bin/bash -c "/home/docker/cnn-ecg/run_configurations.sh"

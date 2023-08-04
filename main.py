@@ -353,7 +353,8 @@ class AdditionalValidationSets(keras.callbacks.Callback):
       else:
         raise ValueError()
 
-      results               = self.model.evaluate(dataGenerator(args.num_classes,
+      results               = self.model.evaluate(dataGenerator(sampling_rate,
+                                                                args.num_classes,
                                                                 args.out_act_fun_2_classes,
                                                                 means,
                                                                 stds,
@@ -382,7 +383,8 @@ lr_decay                    = callbacks.LearningRateScheduler(learning_rate_deca
 model_save                  = ModelSave()
 
 #  Train the model
-history                     = model.fit(dataGenerator(args.num_classes,
+history                     = model.fit(dataGenerator(sampling_rate,
+                                                      args.num_classes,
                                                       args.out_act_fun_2_classes,
                                                       means,
                                                       stds,
@@ -401,7 +403,8 @@ history                     = model.fit(dataGenerator(args.num_classes,
                                                       args.time_scale),
                                         steps_per_epoch   = X_train.shape[0] // args.batch_size,
                                         epochs            = args.epochs,
-                                        validation_data   = dataGenerator(args.num_classes,
+                                        validation_data   = dataGenerator(sampling_rate,
+                                                                          args.num_classes,
                                                                           args.out_act_fun_2_classes,
                                                                           means,
                                                                           stds,
@@ -432,7 +435,8 @@ model.save("checkpoints/model_last_epoch.h5")
 model.load_weights("checkpoints/model_best_val_acc.h5")
 
 #  Predict the labels of the data inside the test set and save the predictions
-y_pred                      = model.predict(dataGenerator(args.num_classes,
+y_pred                      = model.predict(dataGenerator(sampling_rate,
+                                                          args.num_classes,
                                                           args.out_act_fun_2_classes,
                                                           means,
                                                           stds,
