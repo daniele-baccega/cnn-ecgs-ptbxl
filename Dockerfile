@@ -1,6 +1,28 @@
-# Base image https://hub.docker.com/u/danielebaccega
-FROM danielebaccega/cnn-ecg
+# Base image https://hub.docker.com/_/ubuntu
+FROM nvidia/cuda:11.6.2-base-ubuntu20.04
 LABEL maintainer="Daniele Baccega <daniele.baccega@unito.it>"
+
+RUN apt update \
+    && apt install -y build-essential \
+    && apt install -y wget \
+    && apt clean \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV CONDA_DIR /opt/conda
+RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh \
+	&& bash Anaconda3-2022.05-Linux-x86_64.sh -b -p /opt/conda
+
+ENV PATH=$CONDA_DIR/bin:$PATH
+
+COPY tf-gpu.yml tf-gpu.yml
+
+RUN conda env create -f tf-gpu.yml
+
+# Create prophet-forecasting directory
+RUN mkdir /home/docker; chmod -R 777 /home/docker
+RUN mkdir /home/docker/cnn-ecg; chmod 777 /home/docker/cnn-ecg
+
+WORKDIR /home/docker/cnn-ecg/
 
 ## Copy files
 COPY main.py .
