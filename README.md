@@ -8,11 +8,25 @@ This work aims at assessing whether an AI is capable of identifying in a single 
 The potential outcomes of this point are significant: if an AI would be able to detect cardiac abnormalities in single-lead ECGs, that would be a strong incentive towards integrating diagnostic AIs into wearable devices.
 The perspective of single-lead ECGs diagnoses on wearable devices would be game-changer, as it would allow for frequent, accessible and economic screening for large masses of population for both cardiovascular and non-cardiovascular diseases. 
 
-# MATERIALS AND METHODS
+## REQUIREMENTS
+You need to have docker installed on your machine, for more info see this document: https://docs.docker.com/engine/installation/.
 
+Ensure your user has the rights to run docker (without the use of sudo). To create the docker group and add your user:
+
+Create the docker group.
+```
+  $ sudo groupadd docker
+ ```
+ 
+Add your user to the docker group.
+```
+  $ sudo usermod -aG docker $USER
+```
+
+Log out and log back in so that your group membership is re-evaluated.
 
 # HOW TO REPRODUCE
-
+To reproduce the results presented in the paper run:
 ```
 ./reproduce.sh
 ```
@@ -26,7 +40,7 @@ The perspective of single-lead ECGs diagnoses on wearable devices would be game-
 [6] Attia, Z. I., Noseworthy, P. A., Lopez-Jimenez, F., Asirvatham, S. J., Deshmukh, A. J., Gersh, B. J., et al. (2019b). An artificial intelligence-enabled ecg algorithm for the identification of patients with atrial fibrillation during sinus rhythm: a retrospective analysis of outcome prediction. The Lancet 394, 861–867
 
 # COPYRIGHT AND LICENSE
-Copyright Daniele Baccega, Andrea Saglietto, Attilio Fiandrotti, Roberto Esposito
+Copyright _Daniele Baccega, Andrea Saglietto, Attilio Fiandrotti, Roberto Esposito_
 
 ![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
 
