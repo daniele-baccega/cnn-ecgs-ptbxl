@@ -9,6 +9,7 @@ The potential outcomes of this point are significant: if an AI would be able to 
 The perspective of single-lead ECGs diagnoses on wearable devices would be game-changer, as it would allow for frequent, accessible and economic screening for large masses of population for both cardiovascular and non-cardiovascular diseases. 
 
 ## REQUIREMENTS
+### Docker
 You need to have docker installed on your machine, for more info see this document: https://docs.docker.com/engine/installation/.
 
 Ensure your user has the rights to run docker (without the use of sudo). To create the docker group and add your user:
@@ -24,6 +25,13 @@ Add your user to the docker group.
 ```
 
 Log out and log back in so that your group membership is re-evaluated.
+
+### Setting up kaggle token
+1. Go to the kaggle website.
+2. Click on _Your profile_ button on the top right and then select _Account_.
+3. Scroll down to the _API_ section and click on the _Create New Token_ button.
+4. It will initiate the download of a file call kaggle.json. Save the file at a known location on your machine.
+5. Then move the kaggle.json to ~/.kaggle location, if ~/.kaggle does’t exist you can create a directory in home with the same name.
 
 ## HOW TO REPRODUCE
 To reproduce the results presented in the paper run:
