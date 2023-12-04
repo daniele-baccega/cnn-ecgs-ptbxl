@@ -39,5 +39,4 @@ COPY Georgia_Test.py
 COPY physionet_challenge_utility_script.py .
 COPY SNOMED_mappings_scored.csv .
 COPY SNOMED_mappings_unscored.csv .
-COPY Georgia.zip .
 COPY CI_Georgia.py .
