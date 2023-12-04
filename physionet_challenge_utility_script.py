@@ -37,7 +37,7 @@ def import_key_data(path):
                 gender.append(header_data[14][6:-1])
                 age.append(header_data[13][6:-1])
     return gender, age, labels, ecg_filenames
-        
+
 def make_undefined_class(labels, df_unscored):
     df_labels = pd.DataFrame(labels)
     for i in range(len(df_unscored.iloc[0:,1])):
@@ -56,8 +56,5 @@ def make_undefined_class(labels, df_unscored):
 def onehot_encode(df_labels):
     one_hot = MultiLabelBinarizer()
     y=one_hot.fit_transform(df_labels[0].str.split(pat=','))
-    print("The classes we will look at are encoded as SNOMED CT codes:")
-    print(one_hot.classes_)
     y = np.delete(y, -1, axis=1)
-    print("classes: {}".format(y.shape[1]))
     return y, one_hot.classes_[0:-1]

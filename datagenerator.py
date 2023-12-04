@@ -94,9 +94,6 @@ def dataGenerator(sampling_rate, num_classes, output_act_fun, means, stds, sampl
         datum                     = np.array(datum)
         datum                     = datum.reshape(datum.shape[0], datum.shape[1])
 
-        # Posiional encoding
-        # ...
-
         if one_d_model:
           x_batch.append(datum.transpose())
         else:

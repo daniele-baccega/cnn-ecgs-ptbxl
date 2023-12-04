@@ -38,7 +38,8 @@ def interp1d(datum, new_length):
 
 
 ## Initialize some variables
-path                                  = '../../georgia-12lead-ecg-challenge-database/'
+path                                  = '../../Georgia/'
+sampling_rate			      = 100
 num_classes                           = 20
 activation_function                   = 'sigmoid'
 
@@ -87,11 +88,14 @@ for ecg in ecg_filenames_processed:
 data = np.array(data)
 data = data.reshape(data.shape[0], data.shape[1], data.shape[2], 1)
 
+print("Data shape: ", data.shape)
+print("Labels shape: ", y_our_model.shape)
+
 # Load means and stds
-with open('means', 'rb') as means_file:
+with open('../../means', 'rb') as means_file:
   means        = pickle.load(means_file)
 
-with open('stds', 'rb') as stds_file:
+with open('../../stds', 'rb') as stds_file:
   stds        = pickle.load(stds_file)
 
 #  Load the model at the last epoch
@@ -105,7 +109,8 @@ model.summary()
 sample_weights_test         = np.ones(data.shape[0])
 
 #  Predict the labels of the data inside the test set and save the predictions
-y_pred                      = model.predict(dataGenerator(num_classes,
+y_pred                      = model.predict(dataGenerator(sampling_rate,
+							  num_classes,
                                                           activation_function,
                                                           means,
                                                           stds,
