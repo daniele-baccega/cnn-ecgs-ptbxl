@@ -64,3 +64,4 @@ dependencies:
     - tensorflow-determinism==0.3.0
     - traits==6.3.2
     - wfdb==4.0.0
+    - kaggle==1.5.16

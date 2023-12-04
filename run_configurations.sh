@@ -21,3 +21,6 @@ bash Configurations/12leads.sh
 bash Configurations/12leads_WithoutDataAugmentation.sh
 
 python CI.py
+
+# Test the CNN on the Georgia dataset (https://www.kaggle.com/datasets/bjoernjostein/georgia-12lead-ecg-challenge-database)
+bash Georgia_Test.sh

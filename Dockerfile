@@ -10,7 +10,7 @@ RUN apt update \
 
 ENV CONDA_DIR /opt/conda
 RUN wget --quiet https://repo.anaconda.com/archive/Anaconda3-2022.05-Linux-x86_64.sh \
-	&& bash Anaconda3-2022.05-Linux-x86_64.sh -b -p /opt/conda
+    && bash Anaconda3-2022.05-Linux-x86_64.sh -b -p /opt/conda
 
 ENV PATH=$CONDA_DIR/bin:$PATH
 
@@ -34,3 +34,10 @@ COPY run.sh .
 COPY run_configurations.sh .
 COPY reproduce.sh .
 COPY Configurations .
+COPY Georgia_Test.sh
+COPY Georgia_Test.py
+COPY physionet_challenge_utility_script.py .
+COPY SNOMED_mappings_scored.csv .
+COPY SNOMED_mappings_unscored.csv .
+COPY Georgia.zip .
+COPY CI_Georgia.py .

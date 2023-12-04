@@ -63,10 +63,10 @@ for path in paths:
 		specificity_local 			= np.zeros(num_classes+1)
 
 		#  Load the files
-		with open(path + '/20Classes_' + str(count-1) + '/y_pred', 'rb') as y_pred_file:
+		with open(path + '/20Classes_' + str(count-1) + '/y_pred_Georgia', 'rb') as y_pred_file:
 			y_pred 					= pickle.load(y_pred_file)
 
-		with open(path + '/20Classes_' + str(count-1) + '/y_test', 'rb') as y_test_file:
+		with open(path + '/20Classes_' + str(count-1) + '/y_test_Georgia', 'rb') as y_test_file:
 			y_test 					= pickle.load(y_test_file)
 
 		#  Plot ROC curves
@@ -118,17 +118,17 @@ for path in paths:
 
 	print("\n" + path + ":")
 	print("AUC:")
-	for i in [5, 10]:
+	for i in range(num_classes+1):
 		print("{0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{4:0.5f})".format(classes_dic.get(i), roc_auc_left[i]*100, roc_auc_mean[i]*100, roc_auc_right[i]*100, (1.96 * (roc_auc_std[i] / math.sqrt(count)))*100))
 
 	print("\nSensitivity:")
 
-	for i in [5, 10]:
+	for i in range(num_classes+1):
 		print("{0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{4:0.5f})".format(classes_dic.get(i), sensitivity_left[i]*100, sensitivity_mean[i]*100, sensitivity_right[i]*100, (1.96 * (sensitivity_std[i] / math.sqrt(count)))*100))
 
 	print("\nSpecificity:")
 
-	for i in [5, 10]:
+	for i in range(num_classes+1):
 		print("{0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{4:0.5f})".format(classes_dic.get(i), specificity_left[i]*100, specificity_mean[i]*100, specificity_right[i]*100, (1.96 * (specificity_std[i] / math.sqrt(count)))*100))
 
 	global_roc_auc_mean[:, j]		= roc_auc_mean * 100
@@ -144,14 +144,14 @@ for path in paths:
 	j 								= j + 1
 
 
-pd.DataFrame(global_roc_auc_mean, index=classes_dic.values(), columns=paths).to_csv("mean_AUC_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_left, index=classes_dic.values(), columns=paths).to_csv("left_AUC_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_right, index=classes_dic.values(), columns=paths).to_csv("right_AUC_Georgia.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_mean, index=classes_dic.values(), columns=paths).to_csv("mean_AUC.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_left, index=classes_dic.values(), columns=paths).to_csv("left_AUC.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_right, index=classes_dic.values(), columns=paths).to_csv("right_AUC.csv", float_format='%.2f')
 
-pd.DataFrame(global_sensitivity_mean, index=classes_dic.values(), columns=paths).to_csv("mean_sensitivity_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_sensitivity_left, index=classes_dic.values(), columns=paths).to_csv("left_sensitivity_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_sensitivity_right, index=classes_dic.values(), columns=paths).to_csv("right_sensitivity_Georgia.csv", float_format='%.2f')
+pd.DataFrame(global_sensitivity_mean, index=classes_dic.values(), columns=paths).to_csv("mean_sensitivity.csv", float_format='%.2f')
+pd.DataFrame(global_sensitivity_left, index=classes_dic.values(), columns=paths).to_csv("left_sensitivity.csv", float_format='%.2f')
+pd.DataFrame(global_sensitivity_right, index=classes_dic.values(), columns=paths).to_csv("right_sensitivity.csv", float_format='%.2f')
 
-pd.DataFrame(global_specificity_mean, index=classes_dic.values(), columns=paths).to_csv("mean_specificity_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_specificity_left, index=classes_dic.values(), columns=paths).to_csv("left_specificity_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_specificity_right, index=classes_dic.values(), columns=paths).to_csv("right_specificity_Georgia.csv", float_format='%.2f')
+pd.DataFrame(global_specificity_mean, index=classes_dic.values(), columns=paths).to_csv("mean_specificity.csv", float_format='%.2f')
+pd.DataFrame(global_specificity_left, index=classes_dic.values(), columns=paths).to_csv("left_specificity.csv", float_format='%.2f')
+pd.DataFrame(global_specificity_right, index=classes_dic.values(), columns=paths).to_csv("right_specificity.csv", float_format='%.2f')
