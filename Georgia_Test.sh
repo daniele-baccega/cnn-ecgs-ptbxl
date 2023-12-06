@@ -11,18 +11,10 @@ fi
 
 for DIRECTORY in D1 D1-D2 D1-V1 D1-V2 D1-V3 D1-V4 D1-V5 D1-V6 8leads 12leads 12leads_WithoutDataAugmentation
 do
-	cd $DIRECTORY
-
 	for i in {0..49}
 	do
-		cd 20Classes_$i
-
-		python ../../Georgia_Test.py
-
-		cd ..
+		python Georgia_Test.py --path TrainedModels/${DIRECTORY}/20Classes_$i --scenario $DIRECTORY
 	done
-
-	cd ..
 done
 
 python CI_Georgia.py

@@ -128,6 +128,7 @@ print(df)
 ## Preprocessing
 #  Inspect an ECG
 signals, fields             = wfdb.rdsamp(path + 'records' + str(sampling_rate) + '/00000/00001_' + resolution)
+print(fields)
 print("Inspect a .dat file")
 print("Signals:\n", signals)
 print("Shape:", signals.shape)
@@ -185,7 +186,7 @@ print("Test labels:\n", y_test)
 
 #  Take the means and the stds for each lead considering each ECG inside the training set (for the standardization)
 leads                       = X_train.shape[1]
-if not os.path.exists('../../means') or not os.path.exists('../../stds'):
+if not os.path.exists('../means') or not os.path.exists('../stds'):
   samples                     = X_train.shape[2]
   means                       = np.zeros((leads, samples, 1))
   variances                   = np.zeros((leads, samples, 1))
@@ -208,17 +209,17 @@ if not os.path.exists('../../means') or not os.path.exists('../../stds'):
   stds                        = np.sqrt(variances)
 
   # Log means and stds
-  with open('../../means', 'wb') as means_file:
+  with open('../means', 'wb') as means_file:
     pickle.dump(means, means_file)
 
-  with open('../../stds', 'wb') as stds_file:
+  with open('../stds', 'wb') as stds_file:
     pickle.dump(stds, stds_file)
 else:
   # Load means and stds
-  with open('../../means', 'rb') as means_file:
+  with open('../means', 'rb') as means_file:
     means        = pickle.load(means_file)
 
-  with open('../../stds', 'rb') as stds_file:
+  with open('../stds', 'rb') as stds_file:
     stds        = pickle.load(stds_file)
 
 #  Create MultiLabelBinarizer object for the one/many-hot encoding

@@ -1,4 +1,4 @@
 ﻿Dx;SNOMED CT Code;Abbreviation;CPSC;CPSC-Extra;StPetersburg;PTB;PTB-XL;Georgia;Total;Notes
 complete right bundle branch block;713427006;CRBBB;0;113;0;0;542;28;683;We score 713427006 and 59118001 as the same diagnosis.
-right bundle branch block;59118001;IRBBB;1857;1;2;0;0;542;2402
+right bundle branch block;59118001;CRBBB;1857;1;2;0;0;542;2402
 incomplete right bundle branch block;713426002;IRBBB;0;86;0;0;1118;407;1611;
