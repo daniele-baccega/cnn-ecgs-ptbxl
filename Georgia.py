@@ -58,7 +58,7 @@ parser.add_argument('--newpath', type=str, default="GeorgiaRefinement/D1/20Class
 
 args                                      = parser.parse_args()
 
-
+ 
 ## Initialize some variables
 path                                      = 'Georgia/'
 activation_function                       = 'sigmoid'
@@ -133,9 +133,6 @@ selected_leads_name         = [leads[i] for i in selected_leads_indeces]
 data = data[:, selected_leads_indeces, :]
 data = data.reshape(data.shape[0], data.shape[1], data.shape[2], 1)
 
-for i in range(num_classes):
-  print("Class " + str(i) + ": " + str(len([y for y in y_data if y[i] == 1])))
-
 ## Train/Test split
 X_train, y_train, X_test, y_test = iterative_train_test_split(data, y_data, test_size=test_proportion)
 
@@ -200,40 +197,56 @@ history                     = model.fit(dataGenerator(sampling_rate,
                                                       time_scale),
                                         steps_per_epoch   = X_train.shape[0] // batch_size,
                                         epochs            = epochs,
+					validation_data   = dataGenerator(sampling_rate,
+                                                                          num_classes,
+                                                                          activation_function,
+                                                                          means,
+                                                                          stds,
+                                                                          sample_weights_test,
+                                                                          X_test,
+                                                                          y_test,
+                                                                          batch_size,
+                                                                          False,
+                                                                          False,
+                                                                          False,
+                                                                          False,
+                                                                          crop_window,
+                                                                          0),
+                                        validation_steps  = X_test.shape[0] // batch_size,
                                         shuffle           = True,
                                         workers           = 1,
                                         verbose           = 1)
 
 #  Save the model at the last epoch
-model.save(args.newpath + "checkpoints/model_last_epoch.h5")
+model.save(args.newpath + "/checkpoints/model_last_epoch.h5")
 
 #  Plot losses and accuracies
 history_df 													= pd.DataFrame(columns=['epoch', 'loss', 'type'])
 
-history_df['epoch'] 								= np.linspace(1, epochs, epochs, dtype=int)
-history_df['loss'] 									= history['loss'],
-history_df['type'] 									= ["Train" for _ in epochs]
+history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
+history_df['loss'] 									= np.concatenate((history.history['loss'], history.history['val_loss']))
+history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
 
 my_plot_history_loss 								= (ggplot(history_df) \
 																				+ aes(x='epoch', y = 'loss', color = 'type') \
 																				+ geom_line() \
 																				+ labs(title = "Loss", x = 'epoch', y = 'loss', color = 'Type')) \
-																				+ scale_color_manual(values=['#FF0000']) \
+																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
 																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
 	
 my_plot_history_loss.save(args.newpath + '/loss', dpi=600)
 
 history_df 													= pd.DataFrame(columns=['epoch', 'accuracy', 'type'])
 
-history_df['epoch'] 								= np.linspace(1, epochs, epochs, dtype=int)
-history_df['accuracy'] 							= history['binary_accuracy']
-history_df['type'] 									= ["Train" for _ in epochs]
+history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
+history_df['accuracy'] 							= np.concatenate((history.history['binary_accuracy'], history.history['val_binary_accuracy']))
+history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
 
 my_plot_history_accuracy 						= (ggplot(history_df) \
 																				+ aes(x='epoch', y = 'accuracy', color = 'type') \
 																				+ geom_line() \
 																				+ labs(title = "Accuracy", x = 'epoch', y = 'accuracy', color = 'Type')) \
-																				+ scale_color_manual(values=['#FF0000', '#0000FF', '#FF7518']) \
+																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
 																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
 	
 my_plot_history_accuracy.save(args.newpath + '/accuracy', dpi=600)
@@ -245,10 +258,10 @@ y_pred                      = model.predict(dataGenerator(sampling_rate,
                                                           means,
                                                           stds,
                                                           sample_weights_test,
-                                                          data,
+                                                          X_test,
                                                           y_test,
                                                           1),
-                                            steps   = data.shape[0],
+                                            steps   = X_test.shape[0],
                                             workers = 1,
                                             verbose = 1)
 

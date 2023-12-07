@@ -64,9 +64,19 @@ do
                  --final_learning_rate $FINAL_LEARNING_RATE --leads $LEADS --crop_window $CROP_WINDOW --padding $PADDING --time_scale $TIME_SCALE \
                  --amplitude_scale $AMPLITUDE_SCALE --optimizer $OPTIMIZER --momentum $MOMENTUM --dropout $DROPOUT --pool_sizes $POOL_SIZES \
                  --dilation_factors $DILATION_FACTORS --kernel_size_last_conv $KERNEL_SIZE_LAST_CONV --out_act_fun_2_classes $OUT_ACT_FUN_2_CLASSES \
-                 --directory "${DIRECTORY}20Classes_${S}" --num_filters_first_conv $NUM_FILTERS_FIRST_CONV --jitter_std $JITTER_STD $RPEAK $DIFFERENT_FILTERS $ONE_D_MODEL -d
+                 --directory "${DIRECTORY}20Classes_${S}" --num_filters_first_conv $NUM_FILTERS_FIRST_CONV --jitter_std $JITTER_STD $RPEAK $DIFFERENT_FILTERS $ONE_D_MODEL -d &
 
         S=$((S+1))
+
+	if [[ $S -lt $RUN ]]; then
+		bash run.sh --seed $S --num_classes $NUM_CLASSES --dataset $DATASET --epochs $EPOCHS --batch_size $BATCH_SIZE --init_learning_rate $INIT_LEARNING_RATE \
+	                 --final_learning_rate $FINAL_LEARNING_RATE --leads $LEADS --crop_window $CROP_WINDOW --padding $PADDING --time_scale $TIME_SCALE \
+        	         --amplitude_scale $AMPLITUDE_SCALE --optimizer $OPTIMIZER --momentum $MOMENTUM --dropout $DROPOUT --pool_sizes $POOL_SIZES \
+                	 --dilation_factors $DILATION_FACTORS --kernel_size_last_conv $KERNEL_SIZE_LAST_CONV --out_act_fun_2_classes $OUT_ACT_FUN_2_CLASSES \
+                 	 --directory "${DIRECTORY}20Classes_${S}" --num_filters_first_conv $NUM_FILTERS_FIRST_CONV --jitter_std $JITTER_STD $RPEAK $DIFFERENT_FILTERS $ONE_D_MODEL -d
+
+		S=$((S+1))
+	fi
 done
 
 mv $DIRECTORY TrainedModels

@@ -38,7 +38,7 @@ To reproduce the results presented in the paper run:
 ```
 ./reproduce.sh
 ```
-We tested the docker on the following GPUs: NVIDIA GeForce 1080, NVIDIA GeForce 1080ti
+We tested the docker on the following GPUs: NVIDIA GeForce 1080, NVIDIA GeForce 1080ti, NVIDIA P106-100
 
 ## REFERENCES
 [1] LeCun, Yann, et al. "Gradient-based learning applied to document recognition." Proceedings of the IEEE 86.11 (1998): 2278-2324.

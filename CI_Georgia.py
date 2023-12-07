@@ -23,19 +23,40 @@ import pickle
 import math
 import os
 import fnmatch
+import physionet_challenge_utility_script as pc
 from sklearn.metrics import auc, roc_curve, multilabel_confusion_matrix
 
 
-paths 							= ["TrainedModels/D1", "TrainedModels/D1-D2", "TrainedModels/D1-V1", "TrainedModels/D1-V2","TrainedModels/D1-V3", "TrainedModels/D1-V4", "TrainedModels/D1-V5", "TrainedModels/D1-V6", "TrainedModels/8leads", "TrainedModels/12leads", "TrainedModels/12leads_WithoutDataAugmentation"]
+paths 							= ["GeorgiaRefinement/D1", "GeorgiaRefinement/D1-D2", "GeorgiaRefinement/D1-V1", "GeorgiaRefinement/D1-V2","GeorgiaRefinement/D1-V3", "GeorgiaRefinement/D1-V4", "GeorgiaRefinement/D1-V5", "GeorgiaRefinement/D1-V6", "GeorgiaRefinement/8leads", "GeorgiaRefinement/12leads", "GeorgiaRefinement/12leads_WithoutDataAugmentation"]
 
+path							= 'Georgia/'
 num_classes 						= 20
 first_iteration 					= True
 
-classes_dic			 			= {0: "NORM", 1: "STTC", 2: "AMI", 3: "IMI", 4: "LAFB/LPFB", \
-				               		   5: "IRBBB", 6: "LVH", 7: "CLBBB", 8: "NST_", 9: "ISCA", \
-				               		   10: "CRBBB", 11: "IVCD", 12: "ISC_", 13: "_AVB", 14: "ISCI", \
-				               		   15: "WPW", 16: "LAO/LAE", 17: "ILBBB", 18: "RAO/RAE", 19: "LMI", \
-				               		   20: "Average"}
+_, _, labels, ecg_filenames               = pc.import_key_data(path)
+
+SNOMED_scored                             = pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
+SNOMED_unscored                           = pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")
+df_labels                                 = pc.make_undefined_class(labels, SNOMED_unscored)
+
+SNOMED_dic                                = dict()
+for _, row in SNOMED_scored.iterrows():
+  SNOMED_dic[str(row["SNOMED CT Code"])]  = row["Abbreviation"]
+
+classes_dic_name_id                               = dict()
+i                                         = 0
+for value in SNOMED_dic.values():
+  if value not in classes_dic_name_id.keys():
+    classes_dic_name_id[value]                    = i
+    i                                     = i + 1
+
+classes_dic_name_id["Average"] = i
+
+classes_dic = dict()
+for key, value in classes_dic_name_id.items():
+	classes_dic[value] = key
+
+num_classes                               = len(classes_dic.keys())-1
 
 global_roc_auc_mean 					= np.zeros((num_classes+1, len(paths)))
 global_roc_auc_left 					= np.zeros((num_classes+1, len(paths)))
@@ -61,11 +82,11 @@ for path in paths:
 		fpr 					= dict()
 		tpr 					= dict()
 
-		for i in [5, 10]:
+		for i in range(num_classes):
 		  	fpr[i], tpr[i], _ 		= roc_curve(y_test[:, i], y_pred[:, i])
 		  	roc_auc_local[i] 		= auc(fpr[i], tpr[i])
 
-		roc_auc_local[20] 			= np.mean(roc_auc_local[0:20])
+		roc_auc_local[21] 			= np.mean(roc_auc_local[0:21])
 
 		y_pred 					= np.where(y_pred > 0.5, 1, 0)
 
@@ -84,7 +105,7 @@ for path in paths:
 
 	print("\n" + path + ":")
 	print("AUC:")
-	for i in [5, 10]:
+	for i in range(num_classes+1):
 		print("{0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{4:0.5f})".format(classes_dic.get(i), roc_auc_left[i]*100, roc_auc_mean[i]*100, roc_auc_right[i]*100, (1.96 * (roc_auc_std[i] / math.sqrt(count)))*100))
 
 	global_roc_auc_mean[:, j]			= roc_auc_mean * 100
@@ -94,6 +115,6 @@ for path in paths:
 	j 						= j + 1
 
 
-pd.DataFrame(global_roc_auc_mean, index=classes_dic.values(), columns=paths).to_csv("mean_AUC_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_left, index=classes_dic.values(), columns=paths).to_csv("left_AUC_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_right, index=classes_dic.values(), columns=paths).to_csv("right_AUC_Georgia.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_mean, index=classes_dic_name_id.values(), columns=paths).to_csv("mean_AUC_Georgia.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_left, index=classes_dic_name_id.values(), columns=paths).to_csv("left_AUC_Georgia.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_right, index=classes_dic_name_id.values(), columns=paths).to_csv("right_AUC_Georgia.csv", float_format='%.2f')
