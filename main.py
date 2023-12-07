@@ -438,7 +438,7 @@ history                     = model.fit(dataGenerator(sampling_rate,
                                         callbacks         = [lr_decay, model_save, checkpoint_val_accuracy, csv_logger, history_test_as_val],
                                         shuffle           = True,
                                         workers           = 1,
-                                        verbose           = 1);
+                                        verbose           = 1)
 
 #  Save the training history
 with open('history', 'wb') as file_pi:

@@ -32,10 +32,11 @@ def import_key_data(path):
             filepath = subdir + os.sep + filename
             if filepath.endswith(".mat"):
                 data, header_data = load_challenge_data(filepath)
-                labels.append(header_data[15][5:-1])
-                ecg_filenames.append(filepath)
-                gender.append(header_data[14][6:-1])
-                age.append(header_data[13][6:-1])
+                if data.shape[1] == 5000:
+                    labels.append(header_data[15][5:-1])
+                    ecg_filenames.append(filepath)
+                    gender.append(header_data[14][6:-1])
+                    age.append(header_data[13][6:-1])
     return gender, age, labels, ecg_filenames
 
 def make_undefined_class(labels, df_unscored):

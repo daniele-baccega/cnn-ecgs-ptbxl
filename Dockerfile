@@ -34,8 +34,8 @@ COPY run.sh .
 COPY run_configurations.sh .
 COPY reproduce.sh .
 COPY Configurations .
-COPY Georgia_Test.sh .
-COPY Georgia_Test.py .
+COPY Georgia.sh .
+COPY Georgia.py .
 COPY physionet_challenge_utility_script.py .
 COPY SNOMED_mappings_scored.csv .
 COPY SNOMED_mappings_unscored.csv .

@@ -26,6 +26,7 @@ import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
 import tensorflow
+from sklearn.utils import shuffle
 
 
 ## Utility functions (training)

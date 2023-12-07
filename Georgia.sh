@@ -9,11 +9,16 @@ if [[ ! -d Georgia ]]; then
 	mv WFDB Georgia
 fi
 
+NEWDIR="GeorgiaRefinement"
+if [[ ! -d $NEWDIR ]]; then
+	mkdir $NEWDIR
+fi
+
 for DIRECTORY in D1 D1-D2 D1-V1 D1-V2 D1-V3 D1-V4 D1-V5 D1-V6 8leads 12leads 12leads_WithoutDataAugmentation
 do
-	for i in {0..49}
+	for i in {0..10}
 	do
-		python Georgia_Test.py --path TrainedModels/${DIRECTORY}/20Classes_$i --scenario $DIRECTORY
+		python Georgia.py --seed $i --path TrainedModels/${DIRECTORY}/20Classes_$i --scenario $DIRECTORY --newpath ${NEWDIR}/${DIRECTORY}/20Classes_$i
 	done
 done
 
