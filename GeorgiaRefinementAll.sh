@@ -16,7 +16,7 @@ fi
 
 RUN=10
 
-for DIRECTORY in D1 12leads
+for DIRECTORY in D1-D2
 do
 	S=0
 
