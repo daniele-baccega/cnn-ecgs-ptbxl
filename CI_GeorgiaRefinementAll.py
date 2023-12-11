@@ -27,7 +27,7 @@ import physionet_challenge_utility_script as pc
 from sklearn.metrics import auc, roc_curve, multilabel_confusion_matrix
 
 
-paths 							= ["GeorgiaRefinement/D1", "GeorgiaRefinement/D1-D2", "GeorgiaRefinement/D1-V1", "GeorgiaRefinement/D1-V2","GeorgiaRefinement/D1-V3", "GeorgiaRefinement/D1-V4", "GeorgiaRefinement/D1-V5", "GeorgiaRefinement/D1-V6", "GeorgiaRefinement/8leads", "GeorgiaRefinement/12leads", "GeorgiaRefinement/12leads_WithoutDataAugmentation"]
+paths 							= ["GeorgiaRefinementAll/D1", "GeorgiaRefinementLastLayer/12leads"]
 
 path							= 'Georgia/'
 num_classes 						= 20
@@ -83,8 +83,8 @@ for path in paths:
 		tpr 					= dict()
 
 		for i in range(num_classes):
-		  	fpr[i], tpr[i], _ 		= roc_curve(y_test[:, i], y_pred[:, i])
-		  	roc_auc_local[i] 		= auc(fpr[i], tpr[i])
+			fpr[i], tpr[i], _ 		= roc_curve(y_test[:, i], y_pred[:, i])
+			roc_auc_local[i] 		= auc(fpr[i], tpr[i])
 
 		roc_auc_local[21] 			= np.mean(roc_auc_local[0:21])
 

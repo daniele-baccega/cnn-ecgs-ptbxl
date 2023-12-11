@@ -34,9 +34,12 @@ COPY run.sh .
 COPY run_configurations.sh .
 COPY reproduce.sh .
 COPY Configurations .
-COPY Georgia.sh .
-COPY Georgia.py .
+COPY GeorgiaRefinementLastLayer.sh .
+COPY GeorgiaRefinementAll.sh .
+COPY GeorgiaRefinementLastLayer.py .
+COPY GeorgiaRefinementAll.py .
 COPY physionet_challenge_utility_script.py .
 COPY SNOMED_mappings_scored.csv .
 COPY SNOMED_mappings_unscored.csv .
-COPY CI_Georgia.py .
+COPY CI_GeorgiaRefinementLastLayer.py .
+COPY CI_GeorgiaRefinementAll.py .
