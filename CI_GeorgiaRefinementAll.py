@@ -115,6 +115,6 @@ for path in paths:
 	j 						= j + 1
 
 
-pd.DataFrame(global_roc_auc_mean, index=classes_dic_name_id.keys(), columns=paths).to_csv("mean_AUC_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_left, index=classes_dic_name_id.keys(), columns=paths).to_csv("left_AUC_Georgia.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_right, index=classes_dic_name_id.keys(), columns=paths).to_csv("right_AUC_Georgia.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_mean, index=classes_dic_name_id.keys(), columns=paths).to_csv("mean_AUC_GeorgiaRefinementAll.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_left, index=classes_dic_name_id.keys(), columns=paths).to_csv("left_AUC_GeorgiaRefinementAll.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_right, index=classes_dic_name_id.keys(), columns=paths).to_csv("right_AUC_GeorgiaRefinementAll.csv", float_format='%.2f')
