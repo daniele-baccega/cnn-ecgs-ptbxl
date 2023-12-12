@@ -43,3 +43,6 @@ COPY SNOMED_mappings_scored.csv .
 COPY SNOMED_mappings_unscored.csv .
 COPY CI_GeorgiaRefinementLastLayer.py .
 COPY CI_GeorgiaRefinementAll.py .
+COPY evaluate_model.py .
+COPY helper_code.py .
+COPY weights_abbreviation.csv .
