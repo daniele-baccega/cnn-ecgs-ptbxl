@@ -66,13 +66,13 @@ print("Using tensorflow version " + str(tensorflow.__version__))
 print("Using keras version " + str(tensorflow.keras.__version__))
 
 #  This prevents tensorflow from allocating all memory on GPU - for TensorFlow 2.2+
-gpus                        = tensorflow.config.experimental.list_physical_devices('GPU')
+gpus                          = tensorflow.config.experimental.list_physical_devices('GPU')
 for gpu in gpus:
   tensorflow.config.experimental.set_memory_growth(gpu, True)
 
 
 ## Parse the arguments
-args                        = parse_arguments()
+args                          = parse_arguments()
 print(args)
 
 if args.num_classes not in [2, 5, 20, 24]:
@@ -89,7 +89,7 @@ if args.out_act_fun_2_classes not in ["sigmoid", "softmax"]:
 
 
 ## Check the existence of the backup data directory
-data_dir_exists             = os.path.isdir('../../data/' + str(args.num_classes) + 'Classes')
+data_dir_exists               = os.path.isdir('../../data/' + str(args.num_classes) + 'Classes')
 
 if not data_dir_exists:
   os.mkdir('../../data/' + str(args.num_classes) + 'Classes')
@@ -101,33 +101,33 @@ setup_seed(args.seed)
 
 ## Visualize the data
 #  Initialize some variables
-path                        = args.dataset + '/'
-log_file                    = 'tensorflow.log'
-sampling_rate               = 100
-resolution                  = "lr" if sampling_rate == 100 else "hr"
-likelihood_threshold        = 100
-train_folds                 = [1, 2, 3, 4, 5, 6, 7, 8]
-val_fold                    = 9
-test_fold                   = 10
+path                          = args.dataset + '/'
+log_file                      = 'tensorflow.log'
+sampling_rate                 = 100
+resolution                    = "lr" if sampling_rate == 100 else "hr"
+likelihood_threshold          = 100
+train_folds                   = [1, 2, 3, 4, 5, 6, 7, 8]
+val_fold                      = 9
+test_fold                     = 10
 
 #  Visualize some data
-record                      = wfdb.rdrecord(path + 'records' + str(sampling_rate) + '/00000/00001_' + resolution)
-fig                         = wfdb.plot_wfdb(record=record, title='Example signals', figsize = (25, 16), return_fig=True)
+record                        = wfdb.rdrecord(path + 'records' + str(sampling_rate) + '/00000/00001_' + resolution)
+fig                           = wfdb.plot_wfdb(record=record, title='Example signals', figsize = (25, 16), return_fig=True)
 fig.savefig("Example1.png")
 
-record                      = wfdb.rdrecord(path + 'records' + str(sampling_rate) + '/00000/00002_' + resolution)
-fig                         = wfdb.plot_wfdb(record=record, title='Example signals', figsize = (25, 16), return_fig=True)
+record                        = wfdb.rdrecord(path + 'records' + str(sampling_rate) + '/00000/00002_' + resolution)
+fig                           = wfdb.plot_wfdb(record=record, title='Example signals', figsize = (25, 16), return_fig=True)
 fig.savefig("Example2.png")
 
 
 ## Inspect the ptbxl_database.csv
-df                          = pd.read_csv(path + 'ptbxl_database.csv',)
+df                            = pd.read_csv(path + 'ptbxl_database.csv',)
 print(df)
 
 
 ## Preprocessing
 #  Inspect an ECG
-signals, fields             = wfdb.rdsamp(path + 'records' + str(sampling_rate) + '/00000/00001_' + resolution)
+signals, fields               = wfdb.rdsamp(path + 'records' + str(sampling_rate) + '/00000/00001_' + resolution)
 print(fields)
 print("Inspect a .dat file")
 print("Signals:\n", signals)
@@ -137,28 +137,28 @@ print("\n\nInspect a .hea file")
 print("Fields:\n", fields)
 
 #  Select the leads
-selected_leads_indeces      = [i for i in range(0, len(fields["sig_name"])) if fields["sig_name"][i] in args.leads]
-selected_leads_name         = [fields["sig_name"][i] for i in selected_leads_indeces]
+selected_leads_indeces        = [i for i in range(0, len(fields["sig_name"])) if fields["sig_name"][i] in args.leads]
+selected_leads_name           = [fields["sig_name"][i] for i in selected_leads_indeces]
 
 #  Establish the output activation function of the model and define the dictionary
 #  to associate a number to each class (based on the selected number of classes).
 classes_dic_5classes, \
 classes_dic_20classes, \
-classes_dic                 = get_classes_dic_and_output_activation_function(args.num_classes)
+classes_dic                   = get_classes_dic_and_output_activation_function(args.num_classes)
 
 #  Process and save raw data (or load it)
-X, Y, sample_weights        = process_raw_data(data_dir_exists,
-                                               args.num_classes,
-                                               classes_dic_5classes,
-                                               classes_dic_20classes,
-                                               classes_dic,
-                                               sampling_rate,
-                                               path,
-                                               selected_leads_indeces,
-                                               likelihood_threshold,
-                                               train_folds,
-                                               val_fold,
-                                               test_fold)
+X, Y, sample_weights          = process_raw_data(data_dir_exists,
+                                                 args.num_classes,
+                                                 classes_dic_5classes,
+                                                 classes_dic_20classes,
+                                                 classes_dic,
+                                                 sampling_rate,
+                                                 path,
+                                                 selected_leads_indeces,
+                                                 likelihood_threshold,
+                                                 train_folds,
+                                                 val_fold,
+                                                 test_fold)
 
 #  Split data into train, validation and test
 #  Recommended 10-fold train-test splits (strat_fold) obtained via stratified
@@ -170,13 +170,13 @@ X, Y, sample_weights        = process_raw_data(data_dir_exists,
 X_train, y_train, \
 X_val, y_val, \
 X_test, y_test, \
-sample_weights_train        = train_val_test_split(data_dir_exists,
-                                                   X,
-                                                   Y,
-                                                   sample_weights,
-                                                   args.num_classes,
-                                                   val_fold,
-                                                   test_fold)
+sample_weights_train          = train_val_test_split(data_dir_exists,
+                                                     X,
+                                                     Y,
+                                                     sample_weights,
+                                                     args.num_classes,
+                                                     val_fold,
+                                                     test_fold)
 
 del X, Y, sample_weights
 
@@ -185,7 +185,7 @@ print("Validation labels:\n", y_val)
 print("Test labels:\n", y_test)
 
 #  Take the means and the stds for each lead considering each ECG inside the training set (for the standardization)
-leads                       = X_train.shape[1]
+leads                         = X_train.shape[1]
 if not os.path.exists('../means') or not os.path.exists('../stds'):
   samples                     = X_train.shape[2]
   means                       = np.zeros((leads, samples, 1))
@@ -217,37 +217,37 @@ if not os.path.exists('../means') or not os.path.exists('../stds'):
 else:
   # Load means and stds
   with open('../means', 'rb') as means_file:
-    means        = pickle.load(means_file)
+    means                     = pickle.load(means_file)
 
   with open('../stds', 'rb') as stds_file:
-    stds        = pickle.load(stds_file)
+    stds                      = pickle.load(stds_file)
 
 #  Create MultiLabelBinarizer object for the one/many-hot encoding
-mlb                         = MultiLabelBinarizer()
+mlb                           = MultiLabelBinarizer()
 
 #  One-hot encoding
-y_train                     = mlb.fit_transform(y_train)
-y_val                       = mlb.fit_transform(y_val)
-y_test                      = mlb.fit_transform(y_test)
+y_train                       = mlb.fit_transform(y_train)
+y_val                         = mlb.fit_transform(y_val)
+y_test                        = mlb.fit_transform(y_test)
 
 if args.num_classes == 2 and args.out_act_fun_2_classes == "sigmoid":
-  y_train                   = np.argmax(y_train, axis=1)
-  y_val                     = np.argmax(y_val, axis=1)
-  y_test                    = np.argmax(y_test, axis=1)
+  y_train                     = np.argmax(y_train, axis=1)
+  y_val                       = np.argmax(y_val, axis=1)
+  y_test                      = np.argmax(y_test, axis=1)
 
 print("Train labels:\n", y_train)
 print("Validation labels:\n", y_val)
 print("Test labels:\n", y_test)
 
 #  Prepare the data
-X_train                     = np.array(X_train)
-X_val                       = np.array(X_val)
-X_test                      = np.array(X_test)
+X_train                       = np.array(X_train)
+X_val                         = np.array(X_val)
+X_test                        = np.array(X_test)
 
 #  Reshape the data
-X_train, X_val, X_test      = reshape_data(X_train, 
-                                           X_val,
-                                           X_test)
+X_train, X_val, X_test        = reshape_data(X_train, 
+                                             X_val,
+                                             X_test)
 
 print("Train data shape:", X_train.shape)
 print("Validation data shape:", X_val.shape)
@@ -260,52 +260,52 @@ print("Test labels shape:", y_test.shape)
 correlation_matrix(np.concatenate(((X_train - means) / stds, (X_val - means) / stds, (X_test - means) / stds)), leads, selected_leads_name)
 
 #  Define the sample weights for the training, validation and test set
-sample_weights_train        = np.ones(X_train.shape[0])
-sample_weights_val          = np.ones(X_val.shape[0])
-sample_weights_test         = np.ones(X_test.shape[0])
+sample_weights_train          = np.ones(X_train.shape[0])
+sample_weights_val            = np.ones(X_val.shape[0])
+sample_weights_test           = np.ones(X_test.shape[0])
 
 
 ## Build the CNN
 #  Choose and generate the model
-model_function              = get_model_2D
+model_function                = get_model_2D
 
 if args.different_filters:
-  model                     = get_model_2D_different_filters
+  model                       = get_model_2D_different_filters
 
 if args.one_d_model:
-  model                     = get_model_1D
+  model                       = get_model_1D
 
-model                       = model_function(args.init_learning_rate,
-                                             leads,
-                                             args.num_classes,
-                                             args.crop_window + args.padding,
-                                             args.optimizer,
-                                             args.momentum,
-                                             args.dropout,
-                                             args.pool_sizes,
-                                             args.dilation_factors,
-                                             args.kernel_size_last_conv,
-                                             args.out_act_fun_2_classes,
-                                             args.num_filters_first_conv)
+model                         = model_function(args.init_learning_rate,
+                                               leads,
+                                               args.num_classes,
+                                               args.crop_window + args.padding,
+                                               args.optimizer,
+                                               args.momentum,
+                                               args.dropout,
+                                               args.pool_sizes,
+                                               args.dilation_factors,
+                                               args.kernel_size_last_conv,
+                                               args.out_act_fun_2_classes,
+                                               args.num_filters_first_conv)
 
 #  Prepare the data necessary to use a decayed learning rate
-n_steps_per_epoch           = X_train.shape[0] // args.batch_size
+n_steps_per_epoch             = X_train.shape[0] // args.batch_size
 
-lr_boundaries               = [x for x in np.linspace(1, args.epochs-1, args.epochs - 1, dtype=int)]
-lr_values                   = [x for x in np.linspace(args.init_learning_rate, args.final_learning_rate, args.epochs)]
+lr_boundaries                 = [x for x in np.linspace(1, args.epochs-1, args.epochs - 1, dtype=int)]
+lr_values                     = [x for x in np.linspace(args.init_learning_rate, args.final_learning_rate, args.epochs)]
 
 #  Function useful to implement the decaying of the learning rate
 def learning_rate_decay(epoch):
-  lr                        = None
+  lr                          = None
   if epoch <= lr_boundaries[0]:
-    lr                      = lr_values[0]
+    lr                        = lr_values[0]
 
   if epoch > lr_boundaries[-1]:
-    lr                      = lr_values[-1]
+    lr                        = lr_values[-1]
 
   for i in range(1, len(lr_boundaries)):
     if epoch > lr_boundaries[i-1] and epoch <= lr_boundaries[i]:
-      lr                    = lr_values[i]
+      lr                      = lr_values[i]
 
   return lr
 
@@ -315,9 +315,9 @@ class ModelSave(keras.callbacks.Callback):
         super().__init__()
 
   def on_epoch_begin(self, batch, logs=None):
-    lr                      = "LR - {}\n".format((tensorflow.keras.backend.get_value(
-                                self.model.optimizer.lr
-                              )))
+    lr                        = "LR - {}\n".format((tensorflow.keras.backend.get_value(
+                                  self.model.optimizer.lr
+                                )))
     
     with open("lr.txt", "a+") as f:
       f.write(lr)
@@ -333,21 +333,21 @@ class ModelSave(keras.callbacks.Callback):
 class AdditionalValidationSets(keras.callbacks.Callback):
   def __init__(self, validation_sets):
     super(AdditionalValidationSets, self).__init__()
-    self.validation_sets    = validation_sets
+    self.validation_sets      = validation_sets
 
     for validation_set in self.validation_sets:
       if len(validation_set) not in [3, 4]:
         raise ValueError()
 
-    self.epoch              = []
-    self.history            = {}
+    self.epoch                = []
+    self.history              = {}
 
   def on_train_begin(self, logs=None):
-    self.epoch              = []
-    self.history            = {}
+    self.epoch                = []
+    self.history              = {}
 
   def on_epoch_end(self, epoch, logs=None):
-    logs                    = logs or {}
+    logs                      = logs or {}
     self.epoch.append(epoch)
 
     # Record the same values as History() as well
@@ -359,86 +359,86 @@ class AdditionalValidationSets(keras.callbacks.Callback):
       if len(validation_set) == 3:
         validation_data, \
         validation_targets, \
-        validation_set_name = validation_set
-        sample_weights      = None
+        validation_set_name   = validation_set
+        sample_weights        = None
       elif len(validation_set) == 4:
         validation_data, \
         validation_targets, \
         sample_weights, \
-        validation_set_name = validation_set
+        validation_set_name   = validation_set
       else:
         raise ValueError()
 
-      results               = self.model.evaluate(dataGenerator(sampling_rate,
-                                                                args.num_classes,
-                                                                args.out_act_fun_2_classes,
-                                                                means,
-                                                                stds,
-                                                                sample_weights_val,
-                                                                validation_data,
-                                                                validation_targets,
-                                                                args.batch_size,
-                                                                args.one_d_model,
-                                                                False,
-                                                                args.different_filters,
-                                                                False,
-                                                                args.crop_window,
-                                                                args.padding),
-                                                  steps   = validation_data.shape[0] // args.batch_size,
-                                                  workers = 1,
-                                                  verbose = 1)
+      results                 = self.model.evaluate(dataGenerator(sampling_rate,
+                                                                  args.num_classes,
+                                                                  args.out_act_fun_2_classes,
+                                                                  means,
+                                                                  stds,
+                                                                  sample_weights_val,
+                                                                  validation_data,
+                                                                  validation_targets,
+                                                                  args.batch_size,
+                                                                  args.one_d_model,
+                                                                  False,
+                                                                  args.different_filters,
+                                                                  False,
+                                                                  args.crop_window,
+                                                                  args.padding),
+                                                    steps   = validation_data.shape[0] // args.batch_size,
+                                                    workers = 1,
+                                                    verbose = 1)
 
       for metric, result in zip(self.model.metrics_names, results):
-        valuename           = validation_set_name + '_' + metric
+        valuename             = validation_set_name + '_' + metric
         self.history.setdefault(valuename, []).append(result)
 
-checkpoint_val_accuracy     = callbacks.ModelCheckpoint('checkpoints/model_best_val_acc.h5', monitor='val_binary_accuracy', save_weights_only=True, save_best_only=True, verbose=1, mode='max')
-csv_logger                  = callbacks.CSVLogger(os.path.join('train.log'), append=True, separator=';')
-history_test_as_val         = AdditionalValidationSets([(X_test, y_test, 'test')])
-lr_decay                    = callbacks.LearningRateScheduler(learning_rate_decay)
-model_save                  = ModelSave()
+checkpoint_val_accuracy       = callbacks.ModelCheckpoint('checkpoints/model_best_val_acc.h5', monitor='val_binary_accuracy', save_weights_only=True, save_best_only=True, verbose=1, mode='max')
+csv_logger                    = callbacks.CSVLogger(os.path.join('train.log'), append=True, separator=';')
+history_test_as_val           = AdditionalValidationSets([(X_test, y_test, 'test')])
+lr_decay                      = callbacks.LearningRateScheduler(learning_rate_decay)
+model_save                    = ModelSave()
 
 #  Train the model
-history                     = model.fit(dataGenerator(sampling_rate,
-                                                      args.num_classes,
-                                                      args.out_act_fun_2_classes,
-                                                      means,
-                                                      stds,
-                                                      sample_weights_train,
-                                                      X_train,
-                                                      y_train,
-                                                      args.batch_size,
-                                                      args.one_d_model,
-                                                      args.rpeak,
-                                                      args.different_filters,
-                                                      False,
-                                                      args.crop_window,
-                                                      args.padding,
-                                                      args.jitter_std,
-                                                      args.amplitude_scale,
-                                                      args.time_scale),
-                                        steps_per_epoch   = X_train.shape[0] // args.batch_size,
-                                        epochs            = args.epochs,
-                                        validation_data   = dataGenerator(sampling_rate,
-                                                                          args.num_classes,
-                                                                          args.out_act_fun_2_classes,
-                                                                          means,
-                                                                          stds,
-                                                                          sample_weights_val,
-                                                                          X_val,
-                                                                          y_val,
-                                                                          args.batch_size,
-                                                                          args.one_d_model,
-                                                                          False,
-                                                                          args.different_filters,
-                                                                          False,
-                                                                          args.crop_window,
-                                                                          args.padding),
-                                        validation_steps  = X_val.shape[0] // args.batch_size,
-                                        callbacks         = [lr_decay, model_save, checkpoint_val_accuracy, csv_logger, history_test_as_val],
-                                        shuffle           = True,
-                                        workers           = 1,
-                                        verbose           = 1)
+history                       = model.fit(dataGenerator(sampling_rate,
+                                                        args.num_classes,
+                                                        args.out_act_fun_2_classes,
+                                                        means,
+                                                        stds,
+                                                        sample_weights_train,
+                                                        X_train,
+                                                        y_train,
+                                                        args.batch_size,
+                                                        args.one_d_model,
+                                                        args.rpeak,
+                                                        args.different_filters,
+                                                        False,
+                                                        args.crop_window,
+                                                        args.padding,
+                                                        args.jitter_std,
+                                                        args.amplitude_scale,
+                                                        args.time_scale),
+                                          steps_per_epoch   = X_train.shape[0] // args.batch_size,
+                                          epochs            = args.epochs,
+                                          validation_data   = dataGenerator(sampling_rate,
+                                                                            args.num_classes,
+                                                                            args.out_act_fun_2_classes,
+                                                                            means,
+                                                                            stds,
+                                                                            sample_weights_val,
+                                                                            X_val,
+                                                                            y_val,
+                                                                            args.batch_size,
+                                                                            args.one_d_model,
+                                                                            False,
+                                                                            args.different_filters,
+                                                                            False,
+                                                                            args.crop_window,
+                                                                            args.padding),
+                                          validation_steps  = X_val.shape[0] // args.batch_size,
+                                          callbacks         = [lr_decay, model_save, checkpoint_val_accuracy, csv_logger, history_test_as_val],
+                                          shuffle           = True,
+                                          workers           = 1,
+                                          verbose           = 1)
 
 #  Save the training history
 with open('history', 'wb') as file_pi:
@@ -451,24 +451,24 @@ model.save("checkpoints/model_last_epoch.h5")
 model.load_weights("checkpoints/model_best_val_acc.h5")
 
 #  Predict the labels of the data inside the test set and save the predictions
-y_pred                      = model.predict(dataGenerator(sampling_rate,
-                                                          args.num_classes,
-                                                          args.out_act_fun_2_classes,
-                                                          means,
-                                                          stds,
-                                                          sample_weights_test,
-                                                          X_test,
-                                                          y_test,
-                                                          1,
-                                                          args.one_d_model,
-                                                          False,
-                                                          args.different_filters,
-                                                          False,
-                                                          args.crop_window,
-                                                          args.padding),
-                                            steps   = X_test.shape[0],
-                                            workers = 1,
-                                            verbose = 1)
+y_pred                        = model.predict(dataGenerator(sampling_rate,
+                                                            args.num_classes,
+                                                            args.out_act_fun_2_classes,
+                                                            means,
+                                                            stds,
+                                                            sample_weights_test,
+                                                            X_test,
+                                                            y_test,
+                                                            1,
+                                                            args.one_d_model,
+                                                            False,
+                                                            args.different_filters,
+                                                            False,
+                                                            args.crop_window,
+                                                            args.padding),
+                                              steps   = X_test.shape[0],
+                                              workers = 1,
+                                              verbose = 1)
 
 #  Save the predictions
 with open('y_pred', 'wb') as y_pred_file:

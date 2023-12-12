@@ -1,9 +1,10 @@
 '''
 	Deep learning project (100Hz)
 
-	CI.py
+	CI_GeorgiaRefinementAll.py
 
-	Compute the averages and the 95% CIs for the AUC, sensitivity and specificity.
+	Compute the averages and the 95% CIs for the AUC over the Georgia dataset test set after having fine-tuned
+	the original network after the fine-tuning of the classification layer using the Georgia dataset train set.
 
 	Authors: Daniele Baccega, Andrea Saglietto
 	Topic: Deep Learning applied to ECGs
@@ -27,93 +28,105 @@ import physionet_challenge_utility_script as pc
 from sklearn.metrics import auc, roc_curve, multilabel_confusion_matrix
 
 
-paths 							= ["GeorgiaRefinementAll/D1", "GeorgiaRefinementAll/D1-D2", "GeorgiaRefinementLastLayer/12leads"]
+from evaluate_model import compute_challenge_metric, load_weights
 
-path							= 'Georgia/'
-num_classes 						= 20
-first_iteration 					= True
 
-_, _, labels, ecg_filenames               = pc.import_key_data(path)
+paths 										= ["GeorgiaRefinementAll/D1", "GeorgiaRefinementAll/D1-D2", "GeorgiaRefinementAll/12leads"]
 
-SNOMED_scored                             = pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
-SNOMED_unscored                           = pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")
-df_labels                                 = pc.make_undefined_class(labels, SNOMED_unscored)
+path										= 'Georgia/'
+first_iteration 							= True
 
-SNOMED_dic                                = dict()
+_, _, labels, ecg_filenames               	= pc.import_key_data(path)
+
+SNOMED_scored                             	= pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
+SNOMED_unscored                           	= pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")
+df_labels                                 	= pc.make_undefined_class(labels, SNOMED_unscored)
+
+SNOMED_dic                                	= dict()
 for _, row in SNOMED_scored.iterrows():
-  SNOMED_dic[str(row["SNOMED CT Code"])]  = row["Abbreviation"]
+  SNOMED_dic[str(row["SNOMED CT Code"])]  	= row["Abbreviation"]
 
-classes_dic_name_id                               = dict()
-i                                         = 0
+classes_dic_name_id                         = dict()
+i                                         	= 0
 for value in SNOMED_dic.values():
   if value not in classes_dic_name_id.keys():
-    classes_dic_name_id[value]                    = i
-    i                                     = i + 1
+    classes_dic_name_id[value]              = i
+    i                                     	= i + 1
 
-classes_dic_name_id["Average"] = i
+classes_dic_name_id["Average"] 				= i
 
 classes_dic = dict()
 for key, value in classes_dic_name_id.items():
-	classes_dic[value] = key
+	classes_dic[value] 						= key
 
-num_classes                               = len(classes_dic.keys())-1
+num_classes                               	= len(classes_dic.keys())-1
 
-global_roc_auc_mean 					= np.zeros((num_classes+1, len(paths)))
-global_roc_auc_left 					= np.zeros((num_classes+1, len(paths)))
-global_roc_auc_right 					= np.zeros((num_classes+1, len(paths)))
-j							= 0
+global_roc_auc_mean 						= np.zeros((num_classes+1, len(paths)))
+global_roc_auc_left 						= np.zeros((num_classes+1, len(paths)))
+global_roc_auc_right 						= np.zeros((num_classes+1, len(paths)))
+j											= 0
 for path in paths:
-	roc_auc_mean 					= np.zeros(num_classes+1)
-	roc_auc_variance 				= np.zeros(num_classes+1)
+	roc_auc_mean 							= np.zeros(num_classes+1)
+	roc_auc_variance 						= np.zeros(num_classes+1)
 
-	runs 						= len(fnmatch.filter(os.listdir(path + "/"), '20Classes_*')) + 1
+	runs 									= len(fnmatch.filter(os.listdir(path + "/"), '20Classes_*')) + 1
 
 	for count in range(1, runs):
-		roc_auc_local 				= np.zeros(num_classes+1)
+		roc_auc_local 						= np.zeros(num_classes+1)
 
 		#  Load the files
 		with open(path + '/20Classes_' + str(count-1) + '/y_pred_Georgia', 'rb') as y_pred_file:
-			y_pred 				= pickle.load(y_pred_file)
+			y_pred 							= pickle.load(y_pred_file)
 
 		with open(path + '/20Classes_' + str(count-1) + '/y_test_Georgia', 'rb') as y_test_file:
-			y_test 				= pickle.load(y_test_file)
+			y_test 							= pickle.load(y_test_file)
 
 		#  Plot ROC curves
-		fpr 					= dict()
-		tpr 					= dict()
+		fpr 									= dict()
+		tpr 									= dict()
+		thresholds								= dict()
+		J										= dict()
+		best_thres								= dict()
 
 		for i in range(num_classes):
-			fpr[i], tpr[i], _ 		= roc_curve(y_test[:, i], y_pred[:, i])
-			roc_auc_local[i] 		= auc(fpr[i], tpr[i])
+			fpr[i], tpr[i], thresholds[i] 		= roc_curve(y_test[:, i], y_pred[:, i])
+			roc_auc_local[i] 					= auc(fpr[i], tpr[i])
+			J[i] 								= tpr[i] - fpr[i]
+			ix 									= np.argmax(J[i])
+			best_thres[i] 						= thresholds[i][ix]
 
-		roc_auc_local[21] 			= np.mean(roc_auc_local[0:21])
+		roc_auc_local[num_classes]				= np.mean(roc_auc_local[0:num_classes])
 
-		y_pred 					= np.where(y_pred > 0.5, 1, 0)
+		y_pred 									= np.where([[y[i] > thres for i, thres in enumerate(best_thres.values())] for y in y_pred], 1, 0)
 
 		if first_iteration:
-			roc_auc_mean 			= roc_auc_local
-			first_iteration 		= False
+			roc_auc_mean 					= roc_auc_local
+			first_iteration 				= False
 		else:
-			roc_auc_mean 			= roc_auc_mean + (roc_auc_local - roc_auc_mean) / count
-			roc_auc_variance 		= roc_auc_variance + ((count - 1) / count) * (roc_auc_local - roc_auc_mean) ** 2
+			roc_auc_mean 					= roc_auc_mean + (roc_auc_local - roc_auc_mean) / count
+			roc_auc_variance 				= roc_auc_variance + ((count - 1) / count) * (roc_auc_local - roc_auc_mean) ** 2
 
 
-	roc_auc_std 					= np.sqrt(roc_auc_variance / (count - 1))
+	roc_auc_std 							= np.sqrt(roc_auc_variance / (count - 1))
 
-	roc_auc_left 					= roc_auc_mean - 1.96 * (roc_auc_std / math.sqrt(count))
-	roc_auc_right 					= roc_auc_mean + 1.96 * (roc_auc_std / math.sqrt(count))
+	roc_auc_left 							= roc_auc_mean - 1.96 * (roc_auc_std / math.sqrt(count))
+	roc_auc_right 							= roc_auc_mean + 1.96 * (roc_auc_std / math.sqrt(count))
 
 	print("\n" + path + ":")
 	print("AUC:")
 	for i in range(num_classes+1):
 		print("{0}: {1:0.5f} {2:0.5f} {3:0.5f} (±{4:0.5f})".format(classes_dic.get(i), roc_auc_left[i]*100, roc_auc_mean[i]*100, roc_auc_right[i]*100, (1.96 * (roc_auc_std[i] / math.sqrt(count)))*100))
 
-	global_roc_auc_mean[:, j]			= roc_auc_mean * 100
-	global_roc_auc_left[:, j]			= roc_auc_left * 100
-	global_roc_auc_right[:, j]			= roc_auc_right * 100
+	global_roc_auc_mean[:, j]				= roc_auc_mean * 100
+	global_roc_auc_left[:, j]				= roc_auc_left * 100
+	global_roc_auc_right[:, j]				= roc_auc_right * 100
 
-	j 						= j + 1
+	classes, weights = load_weights("weights_abbreviations.csv")
+	challenge_metric = compute_challenge_metric(weights, y_test, y_pred, classes, set(['SNR']))
 
+	print("\nPhysionel Challenge 2021 challenge score: ", challenge_metric)
+
+	j 										= j + 1
 
 pd.DataFrame(global_roc_auc_mean, index=classes_dic_name_id.keys(), columns=paths).to_csv("mean_AUC_GeorgiaRefinementAll.csv", float_format='%.2f')
 pd.DataFrame(global_roc_auc_left, index=classes_dic_name_id.keys(), columns=paths).to_csv("left_AUC_GeorgiaRefinementAll.csv", float_format='%.2f')

@@ -1,9 +1,15 @@
 '''
   Deep learning project (100Hz)
 
-  Georgia.py
+  GeorgiaRefinementAll.py
 
-  ...
+  Fine-tuned the original network after the fine-tuning of the classification layer using the Georgia dataset train set.
+
+  Inputs:
+     --seed:                     random seed
+     --scenario:                 scenario simulated
+     --path:                     path to the directory in which to load the pre-trained model
+     --newpath:                  path to the directory in which to save the fine-tuned models
 
   Authors: Daniele Baccega, Andrea Saglietto
   Topic: Deep Learning applied to ECGs
@@ -16,8 +22,6 @@
 '''
 
 ## Import the libraries
-import os
-import sys
 import argparse
 import numpy as np
 import pandas as pd
@@ -35,7 +39,7 @@ from keras.optimizers import Adam
 from skmultilearn.model_selection import iterative_train_test_split
 
 
-## Import data generator
+## Import data generator and utils
 from datagenerator import dataGenerator
 from utils import interp1d
 
@@ -44,65 +48,68 @@ print("Using tensorflow version " + str(tensorflow.__version__))
 print("Using keras version " + str(tensorflow.keras.__version__))
 
 #  This prevents tensorflow from allocating all memory on GPU - for TensorFlow 2.2+
-gpus                        = tensorflow.config.experimental.list_physical_devices('GPU')
+gpus                                                        = tensorflow.config.experimental.list_physical_devices('GPU')
 for gpu in gpus:
   tensorflow.config.experimental.set_memory_growth(gpu, True)
 
 
-parser                                    = argparse.ArgumentParser()
+## Parse the arguments
+parser                                                      = argparse.ArgumentParser()
 
 parser.add_argument('--seed', type=int, default="123456789", help='Seed (default: 123456789)')
 parser.add_argument('--scenario', type=str, default="D1", help='Scenario simulated, must be a directory name (default: D1)')
-parser.add_argument('--path', type=str, default="GeorgiaRefinementLastLayer/D1/20Classes_0", help='Path to the run directory (default: GeorgiaRefinementLastLayer/D1/20Classes_0)')
+parser.add_argument('--path', type=str, default="GeorgiaRefinementAll/D1/20Classes_0", help='Path to the run directory (default: GeorgiaRefinementAll/D1/20Classes_0)')
 parser.add_argument('--newpath', type=str, default="GeorgiaRefinementAll/D1/20Classes_0", help='Path to the directory in which to save the refined models (default: GeorgiaRefinementAll/D1/20Classes_0)')
 
-args                                      = parser.parse_args()
+args                                                        = parser.parse_args()
 
  
 ## Initialize some variables
-path                                      = 'Georgia/'
-activation_function                       = 'sigmoid'
-sampling_rate			                        = 100
-test_proportion                           = 0.2
-batch_size                                = 32
-crop_window                               = 344
-jitter_std                                = [0.01, 0.1]
-amplitude_scale                           = [0.7, 1.3]
-time_scale                                = [0.8, 1.2]
-epochs                                    = 10
+path                                                        = 'Georgia/'
+activation_function                                         = 'sigmoid'
+sampling_rate                                               = 100
+test_proportion                                             = 0.2
+batch_size                                                  = 32
+crop_window                                                 = 344
+jitter_std                                                  = [0.01, 0.1]
+amplitude_scale                                             = [0.7, 1.3]
+time_scale                                                  = [0.8, 1.2]
+epochs                                                      = 10
 
-leads_dict                                = {"D1": ["I"],
-                                             "D1-D2": ["I", "II"],
-                                             "D1-V1": ["I", "V1"],
-                                             "D1-V2": ["I", "V2"],
-                                             "D1-V3": ["I", "V3"],
-                                             "D1-V4": ["I", "V4"],
-                                             "D1-V5": ["I", "V5"],
-                                             "D1-V6": ["I", "V6"],
-                                             "8leads": ["I", "II", "V1", "V2", "V3", "V4", "V5", "V6"],
-                                             "12leads": ["I", "II", "III", "AVR", "AVL", "AVF", "V1", "V2", "V3", "V4", "V5", "V6"],
-                                             "12leads_WithoutDataAugmentation": ["I", "II", "III", "AVR", "AVL", "AVF", "V1", "V2", "V3", "V4", "V5", "V6"]}
+leads_dict                                                  = {"D1": ["I"],
+                                                               "D1-D2": ["I", "II"],
+                                                               "D1-V1": ["I", "V1"],
+                                                               "D1-V2": ["I", "V2"],
+                                                               "D1-V3": ["I", "V3"],
+                                                               "D1-V4": ["I", "V4"],
+                                                               "D1-V5": ["I", "V5"],
+                                                               "D1-V6": ["I", "V6"],
+                                                               "8leads": ["I", "II", "V1", "V2", "V3", "V4", "V5", "V6"],
+                                                               "12leads": ["I", "II", "III", "AVR", "AVL", "AVF", "V1", "V2", "V3", "V4", "V5", "V6"],
+                                                               "12leads_WithoutDataAugmentation": ["I", "II", "III", "AVR", "AVL", "AVF", "V1", "V2", "V3", "V4", "V5", "V6"]}
 
-_, _, labels, ecg_filenames               = pc.import_key_data(path)
 
-SNOMED_scored                             = pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
-SNOMED_unscored                           = pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")
-df_labels                                 = pc.make_undefined_class(labels, SNOMED_unscored)
+## Load the scored diagnostic classes
+_, _, labels, ecg_filenames                                 = pc.import_key_data(path)
 
-y, snomed_classes                         = pc.onehot_encode(df_labels)
+SNOMED_scored                                               = pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
+SNOMED_unscored                                             = pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")
+df_labels                                                   = pc.make_undefined_class(labels, SNOMED_unscored)
 
-SNOMED_dic                                = dict()
+y, snomed_classes                                           = pc.onehot_encode(df_labels)
+
+SNOMED_dic                                                  = dict()
 for _, row in SNOMED_scored.iterrows():
-  SNOMED_dic[str(row["SNOMED CT Code"])]  = row["Abbreviation"]
+  SNOMED_dic[str(row["SNOMED CT Code"])]                    = row["Abbreviation"]
 
-classes_dic                               = dict()
-i                                         = 0
+classes_dic                                                 = dict()
+i                                                           = 0
 for value in SNOMED_dic.values():
   if value not in classes_dic.keys():
-    classes_dic[value]                    = i
-    i                                     = i + 1
+    classes_dic[value]                                      = i
+    i                                                       = i + 1
 
-num_classes                               = len(classes_dic)
+num_classes                                                 = len(classes_dic)
 
 y_data                                    = np.zeros((len(ecg_filenames), num_classes), dtype=int)
 for i in range(len(ecg_filenames)):
