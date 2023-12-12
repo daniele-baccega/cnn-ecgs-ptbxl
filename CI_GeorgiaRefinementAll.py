@@ -27,7 +27,7 @@ import physionet_challenge_utility_script as pc
 from sklearn.metrics import auc, roc_curve, multilabel_confusion_matrix
 
 
-paths 							= ["GeorgiaRefinementAll/D1", "GeorgiaRefinementAll/D1-D2", "GeorgiaRefinementLastLayer/12leads"]
+paths 							= ["GeorgiaRefinementAll/D1", "GeorgiaRefinementAll/D1-D2", "GeorgiaRefinementAll/12leads"]
 
 path							= 'Georgia/'
 num_classes 						= 20

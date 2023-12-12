@@ -16,7 +16,7 @@ fi
 
 RUN=10
 
-for DIRECTORY in 12leads 12leads_WithoutDataAugmentation
+for DIRECTORY in D1 D1-D2 12leads
 do
 	S=0
 
