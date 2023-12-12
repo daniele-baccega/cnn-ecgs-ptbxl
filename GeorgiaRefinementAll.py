@@ -69,7 +69,7 @@ crop_window                               = 344
 jitter_std                                = [0.01, 0.1]
 amplitude_scale                           = [0.7, 1.3]
 time_scale                                = [0.8, 1.2]
-epochs                                    = 20
+epochs                                    = 10
 
 leads_dict                                = {"D1": ["I"],
                                              "D1-D2": ["I", "II"],
@@ -164,7 +164,7 @@ model = Model(inputs=model.inputs, outputs=new_classifier, name="CNN")
 # Specify the loss, optimizer, and metrics with `compile()`.
 model.compile(
   loss              = BinaryCrossentropy(),
-  optimizer         = Adam(learning_rate=1e-4),
+  optimizer         = Adam(learning_rate=1e-3),
   metrics           = [BinaryAccuracy()]
 )
 
