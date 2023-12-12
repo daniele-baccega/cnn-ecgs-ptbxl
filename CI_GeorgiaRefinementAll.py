@@ -25,9 +25,7 @@ import math
 import os
 import fnmatch
 import physionet_challenge_utility_script as pc
-from sklearn.metrics import auc, roc_curve, multilabel_confusion_matrix
-
-
+from sklearn.metrics import auc, roc_curve
 from evaluate_model import compute_challenge_metric, load_weights
 
 
