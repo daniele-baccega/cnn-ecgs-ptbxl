@@ -45,4 +45,4 @@ COPY CI_GeorgiaRefinementLastLayer.py .
 COPY CI_GeorgiaRefinementAll.py .
 COPY evaluate_model.py .
 COPY helper_code.py .
-COPY weights_abbreviation.csv .
+COPY weights_abbreviations.csv .

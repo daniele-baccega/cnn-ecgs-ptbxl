@@ -147,20 +147,11 @@ X_train, y_train, X_test, y_test                            = iterative_train_te
 
 
 #  Load means and stds
-#with open('TrainedModels/' + args.scenario + '/means', 'rb') as means_file:
-with open('means', 'rb') as means_file:
+with open('TrainedModels/' + args.scenario + '/means', 'rb') as means_file:
   means                                                     = pickle.load(means_file)
 
-#with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
-with open('stds', 'rb') as stds_file:
+with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
   stds                                                      = pickle.load(stds_file)
-
-means                                                       = means[selected_leads_indeces, :, :]
-stds                                                        = stds[selected_leads_indeces, :, :]
-
-means                                                       = means.reshape(len(selected_leads_name), means.shape[1], 1)
-stds                                                        = stds.reshape(len(selected_leads_name), stds.shape[1], 1)
-
 
 #  Load the model at the last epoch
 model                                                       = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
