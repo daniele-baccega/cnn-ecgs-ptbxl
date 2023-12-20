@@ -34,7 +34,7 @@ paths 										= ["ChinaRefinement/D1", "ChinaRefinement/D1-D2", "ChinaRefineme
 path										= 'China/'
 first_iteration 							= True
 
-_, _, labels, ecg_filenames               	= pc.import_key_data(path)
+_, _, labels, ecg_filenames               	= pc.import_key_data_China(path)
 
 SNOMED_scored                             	= pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
 SNOMED_unscored                           	= pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")

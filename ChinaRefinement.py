@@ -150,29 +150,31 @@ X_train, y_train, X_test, y_test = iterative_train_test_split(data, y_data, test
 # Load means and stds
 #with open('TrainedModels/' + args.scenario + '/means', 'rb') as means_file:
 with open('means', 'rb') as means_file:
-  means        = pickle.load(means_file)
+  means        = pickle.load(means_file)[selected_leads_indeces, :, 0]
 
 #with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
 with open('stds', 'rb') as stds_file:
-  stds        = pickle.load(stds_file)
+  stds        = pickle.load(stds_file)[selected_leads_indeces, :, 0]
 
+means = means.reshape(means.shape[0], means.shape[1], 1)
+stds = stds.reshape(stds.shape[0], stds.shape[1], 1)
 
 #  Load the model at the last epoch
 model = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
-# model.trainable = True
+model.trainable = False
 
-# new_classifier = Dense(num_classes, activation=activation_function, name="D34")(model.layers[-2].output)
+new_classifier = Dense(num_classes, activation=activation_function, name="D34")(model.layers[-2].output)
 
-# model = Model(inputs=model.inputs, outputs=new_classifier, name="CNN")
+model = Model(inputs=model.inputs, outputs=new_classifier, name="CNN")
 
-# # Specify the loss, optimizer, and metrics with `compile()`.
-# model.compile(
-#   loss              = BinaryCrossentropy(),
-#   optimizer         = Adam(learning_rate=1e-3),
-#   metrics           = [BinaryAccuracy()]
-# )
+# Specify the loss, optimizer, and metrics with `compile()`.
+model.compile(
+  loss              = BinaryCrossentropy(),
+  optimizer         = Adam(learning_rate=1e-4),
+  metrics           = [BinaryAccuracy()]
+)
 
-# model.summary()
+model.summary()
 
 # sample_weights_train        = np.ones(X_train.shape[0])
 sample_weights_test         = np.ones(X_test.shape[0])
