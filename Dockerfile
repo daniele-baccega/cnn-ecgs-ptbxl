@@ -41,8 +41,10 @@ COPY GeorgiaRefinementLastLayer.py .
 COPY GeorgiaRefinementAll.py .
 COPY ChinaRefinement.py .
 COPY physionet_challenge_utility_script.py .
-COPY SNOMED_mappings_scored.csv .
-COPY SNOMED_mappings_unscored.csv .
+COPY SNOMED_mappings_scored_Georgia.csv .
+COPY SNOMED_mappings_unscored_Georgia.csv .
+COPY SNOMED_mappings_scored_China.csv .
+COPY SNOMED_mappings_unscored_China.csv .
 COPY CI_GeorgiaRefinementLastLayer.py .
 COPY CI_GeorgiaRefinementAll.py .
 COPY CI_ChinaRefinement.py .

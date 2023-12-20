@@ -68,7 +68,7 @@ args                                                        = parser.parse_args(
 path                                                        = 'China/'
 activation_function                                         = 'sigmoid'
 sampling_rate                                               = 100
-test_proportion                                             = 1
+test_proportion                                             = 0.2
 batch_size                                                  = 32
 crop_window                                                 = 344
 jitter_std                                                  = [0.01, 0.1]
@@ -92,8 +92,8 @@ leads_dict                                                  = {"D1": ["I"],
 ## Load the scored diagnostic classes
 _, _, labels, ecg_filenames                                 = pc.import_key_data_China(path)
 
-SNOMED_scored                                               = pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
-SNOMED_unscored                                             = pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")
+SNOMED_scored                                               = pd.read_csv("SNOMED_mappings_scored_China.csv", sep=",")
+SNOMED_unscored                                             = pd.read_csv("SNOMED_mappings_unscored_China.csv", sep=",")
 df_labels                                                   = pc.make_undefined_class(labels, SNOMED_unscored)
 
 y, snomed_classes                                           = pc.onehot_encode(df_labels)
@@ -176,83 +176,83 @@ model.compile(
 
 model.summary()
 
-# sample_weights_train        = np.ones(X_train.shape[0])
+sample_weights_train        = np.ones(X_train.shape[0])
 sample_weights_test         = np.ones(X_test.shape[0])
 
-# #  Train the model
-# history                     = model.fit(dataGenerator(sampling_rate,
-#                                                       num_classes,
-#                                                       activation_function,
-#                                                       means,
-#                                                       stds,
-#                                                       sample_weights_train,
-#                                                       X_train,
-#                                                       y_train,
-#                                                       batch_size,
-#                                                       False,
-#                                                       False,
-#                                                       False,
-#                                                       False,
-#                                                       crop_window,
-#                                                       0,
-#                                                       jitter_std,
-#                                                       amplitude_scale,
-#                                                       time_scale),
-#                                         steps_per_epoch   = X_train.shape[0] // batch_size,
-#                                         epochs            = epochs,
-# 					validation_data   = dataGenerator(sampling_rate,
-#                                                                           num_classes,
-#                                                                           activation_function,
-#                                                                           means,
-#                                                                           stds,
-#                                                                           sample_weights_test,
-#                                                                           X_test,
-#                                                                           y_test,
-#                                                                           batch_size,
-#                                                                           False,
-#                                                                           False,
-#                                                                           False,
-#                                                                           False,
-#                                                                           crop_window,
-#                                                                           0),
-#                                         validation_steps  = X_test.shape[0] // batch_size,
-#                                         shuffle           = True,
-#                                         workers           = 1,
-#                                         verbose           = 1)
+#  Train the model
+history                     = model.fit(dataGenerator(sampling_rate,
+                                                      num_classes,
+                                                      activation_function,
+                                                      means,
+                                                      stds,
+                                                      sample_weights_train,
+                                                      X_train,
+                                                      y_train,
+                                                      batch_size,
+                                                      False,
+                                                      False,
+                                                      False,
+                                                      False,
+                                                      crop_window,
+                                                      0,
+                                                      jitter_std,
+                                                      amplitude_scale,
+                                                      time_scale),
+                                        steps_per_epoch   = X_train.shape[0] // batch_size,
+                                        epochs            = epochs,
+					validation_data   = dataGenerator(sampling_rate,
+                                                                          num_classes,
+                                                                          activation_function,
+                                                                          means,
+                                                                          stds,
+                                                                          sample_weights_test,
+                                                                          X_test,
+                                                                          y_test,
+                                                                          batch_size,
+                                                                          False,
+                                                                          False,
+                                                                          False,
+                                                                          False,
+                                                                          crop_window,
+                                                                          0),
+                                        validation_steps  = X_test.shape[0] // batch_size,
+                                        shuffle           = True,
+                                        workers           = 1,
+                                        verbose           = 1)
 
-# #  Save the model at the last epoch
-# model.save(args.newpath + "/checkpoints/model_last_epoch.h5")
+#  Save the model at the last epoch
+model.save(args.newpath + "/checkpoints/model_last_epoch.h5")
 
-# #  Plot losses and accuracies
-# history_df 													= pd.DataFrame(columns=['epoch', 'loss', 'type'])
+#  Plot losses and accuracies
+history_df 													= pd.DataFrame(columns=['epoch', 'loss', 'type'])
 
-# history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
-# history_df['loss'] 									= np.concatenate((history.history['loss'], history.history['val_loss']))
-# history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
+history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
+history_df['loss'] 									= np.concatenate((history.history['loss'], history.history['val_loss']))
+history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
 
-# my_plot_history_loss 								= (ggplot(history_df) \
-# 																				+ aes(x='epoch', y = 'loss', color = 'type') \
-# 																				+ geom_line() \
-# 																				+ labs(title = "Loss", x = 'epoch', y = 'loss', color = 'Type')) \
-# 																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
-# 																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
+my_plot_history_loss 								= (ggplot(history_df) \
+																				+ aes(x='epoch', y = 'loss', color = 'type') \
+																				+ geom_line() \
+																				+ labs(title = "Loss", x = 'epoch', y = 'loss', color = 'Type')) \
+																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
+																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
 	
-# my_plot_history_loss.save(args.newpath + '/loss', dpi=600)
+my_plot_history_loss.save(args.newpath + '/loss', dpi=600)
 
-# history_df 													= pd.DataFrame(columns=['epoch', 'accuracy', 'type'])
+history_df 													= pd.DataFrame(columns=['epoch', 'accuracy', 'type'])
 
-# history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
-# history_df['accuracy'] 							= np.concatenate((history.history['binary_accuracy'], history.history['val_binary_accuracy']))
-# history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
+history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
+history_df['accuracy'] 							= np.concatenate((history.history['binary_accuracy'], history.history['val_binary_accuracy']))
+history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
 
-# my_plot_history_accuracy 						= (ggplot(history_df) \
-# 																				+ aes(x='epoch', y = 'accuracy', color = 'type') \
-# 																				+ geom_line() \
-# 																				+ labs(title = "Accuracy", x = 'epoch', y = 'accuracy', color = 'Type')) \
-# 																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
-# 																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
+my_plot_history_accuracy 						= (ggplot(history_df) \
+																				+ aes(x='epoch', y = 'accuracy', color = 'type') \
+																				+ geom_line() \
+																				+ labs(title = "Accuracy", x = 'epoch', y = 'accuracy', color = 'Type')) \
+																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
+																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
 	
-# my_plot_history_accuracy.save(args.newpath + '/accuracy', dpi=600)
+my_plot_history_accuracy.save(args.newpath + '/accuracy', dpi=600)
 
 #  Predict the labels of the data inside the test set and save the predictions
 y_pred                      = model.predict(dataGenerator(sampling_rate,

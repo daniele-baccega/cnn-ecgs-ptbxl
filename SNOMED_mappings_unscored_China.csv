@@ -87,3 +87,7 @@ premature ventricular contractions,427172004,PVC,0,188,0,0,0,0,188,We score 4271
 prolonged pr interval,164947007,LPR,0,0,0,0,340,0,340,
 pacing rhythm,10370003,PR,0,3,0,0,296,0,299,
 bradycardia,426627000,Brady,0,271,11,0,0,6,288,
+left anterior fascicular block,445118002,LAnFB,0,0,0,0,1626,180,1806,
+left axis deviation,39732003,LAD,0,0,0,0,5146,940,6086,
+low qrs voltages,251146004,LQRSV,0,0,0,0,182,374,556,
+qwave abnormal,164917005,QAb,0,1,0,0,548,464,1013,
