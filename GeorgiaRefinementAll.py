@@ -58,7 +58,7 @@ parser                                                      = argparse.ArgumentP
 
 parser.add_argument('--seed', type=int, default="123456789", help='Seed (default: 123456789)')
 parser.add_argument('--scenario', type=str, default="D1", help='Scenario simulated, must be a directory name (default: D1)')
-parser.add_argument('--path', type=str, default="GeorgiaRefinementAll/D1/20Classes_0", help='Path to the run directory (default: GeorgiaRefinementAll/D1/20Classes_0)')
+parser.add_argument('--path', type=str, default="GeorgiaRefinementLastLayer/D1/20Classes_0", help='Path to the run directory (default: GeorgiaRefinementLastLayer/D1/20Classes_0)')
 parser.add_argument('--newpath', type=str, default="GeorgiaRefinementAll/D1/20Classes_0", help='Path to the directory in which to save the refined models (default: GeorgiaRefinementAll/D1/20Classes_0)')
 
 args                                                        = parser.parse_args()
@@ -90,7 +90,7 @@ leads_dict                                                  = {"D1": ["I"],
 
 
 ## Load the scored diagnostic classes
-_, _, labels, ecg_filenames                                 = pc.import_key_data(path)
+_, _, labels, ecg_filenames                                 = pc.import_key_data_Georgia(path)
 
 SNOMED_scored                                               = pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
 SNOMED_unscored                                             = pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")

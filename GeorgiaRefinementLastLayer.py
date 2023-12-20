@@ -90,7 +90,7 @@ leads_dict                                                  = {"D1": ["I"],
 
 
 ## Load the scored diagnostic classes
-_, _, labels, ecg_filenames                                 = pc.import_key_data(path)
+_, _, labels, ecg_filenames                                 = pc.import_key_data_Georgia(path)
 
 SNOMED_scored                                               = pd.read_csv("SNOMED_mappings_scored.csv", sep=",")
 SNOMED_unscored                                             = pd.read_csv("SNOMED_mappings_unscored.csv", sep=",")
