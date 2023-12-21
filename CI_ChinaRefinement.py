@@ -119,7 +119,7 @@ for path in paths:
 	global_roc_auc_left[:, j]				= roc_auc_left * 100
 	global_roc_auc_right[:, j]				= roc_auc_right * 100
 
-	classes, weights = load_weights("weights_abbreviations.csv")
+	classes, weights = load_weights("weights_abbreviations_China.csv")
 	challenge_metric = compute_challenge_metric(weights, y_test, y_pred, classes, set(['SNR']))
 
 	print("\nPhysionel Challenge 2021 challenge score: ", challenge_metric)
