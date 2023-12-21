@@ -161,7 +161,7 @@ stds = stds.reshape(stds.shape[0], stds.shape[1], 1)
 
 #  Load the model at the last epoch
 model = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
-model.trainable = False
+model.trainable = True
 
 new_classifier = Dense(num_classes, activation=activation_function, name="D34")(model.layers[-2].output)
 
@@ -170,7 +170,7 @@ model = Model(inputs=model.inputs, outputs=new_classifier, name="CNN")
 # Specify the loss, optimizer, and metrics with `compile()`.
 model.compile(
   loss              = BinaryCrossentropy(),
-  optimizer         = Adam(learning_rate=1e-4),
+  optimizer         = Adam(learning_rate=1e-3),
   metrics           = [BinaryAccuracy()]
 )
 
