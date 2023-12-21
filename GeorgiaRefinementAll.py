@@ -155,10 +155,6 @@ with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
 model = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
 model.trainable = True
 
-new_classifier = Dense(num_classes, activation=activation_function, name="D34")(model.layers[-2].output)
-
-model = Model(inputs=model.inputs, outputs=new_classifier, name="CNN")
-
 # Specify the loss, optimizer, and metrics with `compile()`.
 model.compile(
   loss              = BinaryCrossentropy(),

@@ -8,7 +8,7 @@ fi
 
 RUN=10
 
-for DIRECTORY in D1 D1-D2 D1-V1 D1-V2 D1-V3 D1-V4 D1-V5 D1-V6 8leads 12leads 12leads_WithoutDataAugmentation
+for DIRECTORY in D1 D1-D2 12leads
 do
 	S=0
 
