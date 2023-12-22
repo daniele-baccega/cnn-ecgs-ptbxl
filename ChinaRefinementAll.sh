@@ -12,12 +12,8 @@ for DIRECTORY in D1 D1-D2 12leads
 do
 	S=0
 
-	mkdir ${NEWDIR}/${DIRECTORY}
-
 	while [ $S -lt $RUN ]
 	do
-		mkdir ${NEWDIR}/${DIRECTORY}/20Classes_$S
-
 		python ChinaRefinementAll.py --seed $S --path ChinaRefinementLastLayer/${DIRECTORY}/20Classes_$S --scenario $DIRECTORY --newpath ${NEWDIR}/${DIRECTORY}/20Classes_$S
 
 		S=$((S+1))

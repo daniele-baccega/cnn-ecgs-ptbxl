@@ -22,6 +22,8 @@ bash Configurations/12leads_WithoutDataAugmentation.sh
 
 python CI.py
 
-# Test the CNN on the Georgia dataset (https://www.kaggle.com/datasets/bjoernjostein/georgia-12lead-ecg-challenge-database)
+# Test the CNN on the Georgia and China datasets (https://www.kaggle.com/datasets/bjoernjostein/georgia-12lead-ecg-challenge-database, https://www.kaggle.com/datasets/bjoernjostein/china-12lead-ecg-challenge-database )
 bash GeorgiaRefinementLastLayer.sh
 bash GeorgiaRefinementAll.sh
+bash ChinaRefinementLastLayer.sh
+bash ChinaRefinementAll.sh
