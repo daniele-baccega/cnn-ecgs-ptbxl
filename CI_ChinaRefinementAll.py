@@ -25,6 +25,7 @@ import os
 import fnmatch
 import physionet_challenge_utility_script as pc
 from sklearn.metrics import auc, roc_curve
+from evaluate_model import compute_challenge_metric, load_weights
 
 
 paths 										= ["ChinaRefinementLastLayer/D1", "ChinaRefinementLastLayer/D1-D2", "ChinaRefinementLastLayer/12leads"]
@@ -116,6 +117,11 @@ for path in paths:
 	global_roc_auc_mean[:, j]				= roc_auc_mean * 100
 	global_roc_auc_left[:, j]				= roc_auc_left * 100
 	global_roc_auc_right[:, j]				= roc_auc_right * 100
+
+	classes, weights = load_weights("weights_abbreviations_China.csv")
+	challenge_metric = compute_challenge_metric(weights, y_test, y_pred, classes, set(['SNR']))
+
+	print("\nPhysionel Challenge 2021 challenge score: ", challenge_metric)
 
 	j 										= j + 1
 

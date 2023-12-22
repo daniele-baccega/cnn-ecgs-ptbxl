@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Test the CNN on the China dataset (https://www.kaggle.com/datasets/bjoernjostein/china-12lead-ecg-challenge-database)
-NEWDIR="ChinaRefinementLastLayer"
+NEWDIR="ChinaRefinementAll"
 if [[ ! -d $NEWDIR ]]; then
 	mkdir $NEWDIR
 fi
@@ -18,10 +18,10 @@ do
 	do
 		mkdir ${NEWDIR}/${DIRECTORY}/20Classes_$S
 
-		python ChinaRefinementLastLayer.py --seed $S --path GeorgiaRefinementAll/${DIRECTORY}/20Classes_$S --scenario $DIRECTORY --newpath ${NEWDIR}/${DIRECTORY}/20Classes_$S
+		python ChinaRefinementAll.py --seed $S --path ChinaRefinementLastLayer/${DIRECTORY}/20Classes_$S --scenario $DIRECTORY --newpath ${NEWDIR}/${DIRECTORY}/20Classes_$S
 
 		S=$((S+1))
 	done
 done
 
-python CI_ChinaRefinementLastLayer.py
+python CI_ChinaRefinementAll.py

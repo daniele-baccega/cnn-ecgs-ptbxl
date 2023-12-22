@@ -19,13 +19,12 @@
 ## Import the libraries
 import numpy as np
 import pandas as pd
-import argparse
 import pickle
 import math
 import os
 import fnmatch
 import physionet_challenge_utility_script as pc
-from sklearn.metrics import auc, roc_curve, multilabel_confusion_matrix
+from sklearn.metrics import auc, roc_curve
 
 
 paths 										= ["GeorgiaRefinementLastLayer/D1", "GeorgiaRefinementLastLayer/D1-D2", "GeorgiaRefinementLastLayer/12leads"]

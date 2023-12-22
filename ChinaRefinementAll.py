@@ -1,9 +1,9 @@
 '''
   Deep learning project (100Hz)
 
-  ChinaRefinementLastLayer.py
+  ChinaRefinementAll.py
 
-  Fine-tuned the classification layer of the orignal network using the China dataset train set.
+  Fine-tuned the original network after the fine-tuning of the classification layer using the China dataset train set.
 
   Inputs:
      --seed:                     random seed
@@ -58,8 +58,8 @@ parser                                                      = argparse.ArgumentP
 
 parser.add_argument('--seed', type=int, default="123456789", help='Seed (default: 123456789)')
 parser.add_argument('--scenario', type=str, default="D1", help='Scenario simulated, must be a directory name (default: D1)')
-parser.add_argument('--path', type=str, default="GeorgiaRefinementAll/D1/20Classes_0", help='Path to the run directory (default: GeorgiaRefinementAll/D1/20Classes_0)')
-parser.add_argument('--newpath', type=str, default="ChinaRefinementLastLayer/D1/20Classes_0", help='Path to the directory in which to save the refined models (default: ChinaRefinementLastLayer/D1/20Classes_0)')
+parser.add_argument('--path', type=str, default="ChinaRefinementLastLayer/D1/20Classes_0", help='Path to the run directory (default: ChinaRefinementLastLayer/D1/20Classes_0)')
+parser.add_argument('--newpath', type=str, default="ChinaRefinementAll/D1/20Classes_0", help='Path to the directory in which to save the refined models (default: ChinaRefinementAll/D1/20Classes_0)')
 
 args                                                        = parser.parse_args()
 
@@ -161,11 +161,7 @@ stds = stds.reshape(stds.shape[0], stds.shape[1], 1)
 
 #  Load the model at the last epoch
 model = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
-model.trainable = False
-
-new_classifier = Dense(num_classes, activation=activation_function, name="D34")(model.layers[-2].output)
-
-model = Model(inputs=model.inputs, outputs=new_classifier, name="CNN")
+model.trainable = True
 
 # Specify the loss, optimizer, and metrics with `compile()`.
 model.compile(
