@@ -28,12 +28,12 @@ import physionet_challenge_utility_script as pc
 from sklearn.metrics import auc, roc_curve, multilabel_confusion_matrix
 
 
-paths 										= ["GeorgiaRefinementLastLayer/D1", "GeorgiaRefinementLastLayer/D1-D2", "GeorgiaRefinementLastLayer/D1-V1", "GeorgiaRefinementLastLayer/D1-V2","GeorgiaRefinementLastLayer/D1-V3", "GeorgiaRefinementLastLayer/D1-V4", "GeorgiaRefinementLastLayer/D1-V5", "GeorgiaRefinementLastLayer/D1-V6", "GeorgiaRefinementLastLayer/8leads", "GeorgiaRefinementLastLayer/12leads", "GeorgiaRefinementLastLayer/12leads_WithoutDataAugmentation"]
+paths 										= ["GeorgiaRefinementLastLayer/D1", "GeorgiaRefinementLastLayer/D1-D2", "GeorgiaRefinementLastLayer/12leads"]
 
 path										= 'Georgia/'
 first_iteration 							= True
 
-_, _, labels, ecg_filenames               	= pc.import_key_data(path)
+_, _, labels, ecg_filenames               	= pc.import_key_data_Georgia(path)
 
 SNOMED_scored                             	= pd.read_csv("SNOMED_mappings_scored_Georgia.csv", sep=",")
 SNOMED_unscored                           	= pd.read_csv("SNOMED_mappings_unscored_Georgia.csv", sep=",")

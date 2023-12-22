@@ -34,7 +34,7 @@ paths 										= ["GeorgiaRefinementAll/D1", "GeorgiaRefinementAll/D1-D2", "Geo
 path										= 'Georgia/'
 first_iteration 							= True
 
-_, _, labels, ecg_filenames               	= pc.import_key_data(path)
+_, _, labels, ecg_filenames               	= pc.import_key_data_Georgia(path)
 
 SNOMED_scored                             	= pd.read_csv("SNOMED_mappings_scored_Georgia.csv", sep=",")
 SNOMED_unscored                           	= pd.read_csv("SNOMED_mappings_unscored_Georgia.csv", sep=",")

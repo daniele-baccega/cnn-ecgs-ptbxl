@@ -91,7 +91,6 @@ leads_dict                                                  = {"D1": ["I"],
 
 ## Load the scored diagnostic classes
 _, _, labels, ecg_filenames                                 = pc.import_key_data_Georgia(path)
-
 SNOMED_scored                                               = pd.read_csv("SNOMED_mappings_scored_Georgia.csv", sep=",")
 SNOMED_unscored                                             = pd.read_csv("SNOMED_mappings_unscored_Georgia.csv", sep=",")
 df_labels                                                   = pc.make_undefined_class(labels, SNOMED_unscored)
@@ -146,12 +145,17 @@ data                                                        = data.reshape(data.
 X_train, y_train, X_test, y_test                            = iterative_train_test_split(data, y_data, test_size=test_proportion)
 
 
-#  Load means and stds
-with open('TrainedModels/' + args.scenario + '/means', 'rb') as means_file:
-  means                                                     = pickle.load(means_file)
+# Load means and stds
+#with open('TrainedModels/' + args.scenario + '/means', 'rb') as means_file:
+with open('means', 'rb') as means_file:
+  means        = pickle.load(means_file)[selected_leads_indeces, :, 0]
 
-with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
-  stds                                                      = pickle.load(stds_file)
+#with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
+with open('stds', 'rb') as stds_file:
+  stds        = pickle.load(stds_file)[selected_leads_indeces, :, 0]
+
+means = means.reshape(means.shape[0], means.shape[1], 1)
+stds = stds.reshape(stds.shape[0], stds.shape[1], 1)
 
 #  Load the model at the last epoch
 model                                                       = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
