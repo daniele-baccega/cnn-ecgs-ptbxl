@@ -21,7 +21,7 @@
 S=0
 NUM_CLASSES="20"
 DATASET="../../ptb-xl-a-large-publicly-available-electrocardiography-dataset-1.0.1"
-EPOCHS="10"
+EPOCHS="200"
 BATCH_SIZE="32"
 INIT_LEARNING_RATE="1e-2"
 FINAL_LEARNING_RATE="1e-4"
