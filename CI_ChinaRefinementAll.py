@@ -28,7 +28,7 @@ from sklearn.metrics import auc, roc_curve
 from evaluate_model import compute_challenge_metric, load_weights
 
 
-paths 										= ["ChinaRefinementLastLayer/D1", "ChinaRefinementLastLayer/D1-D2", "ChinaRefinementLastLayer/12leads"]
+paths 										= ["ChinaRefinementAll/D1", "ChinaRefinementAll/D1-D2", "ChinaRefinementAll/12leads"]
 
 path										= 'China/'
 first_iteration 							= True
@@ -125,6 +125,6 @@ for path in paths:
 
 	j 										= j + 1
 
-pd.DataFrame(global_roc_auc_mean, index=classes_dic_name_id.keys(), columns=paths).to_csv("mean_AUC_ChinaRefinementLastLayer.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_left, index=classes_dic_name_id.keys(), columns=paths).to_csv("left_AUC_ChinaRefinementLastLayer.csv", float_format='%.2f')
-pd.DataFrame(global_roc_auc_right, index=classes_dic_name_id.keys(), columns=paths).to_csv("right_AUC_ChinaRefinementLastLayer.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_mean, index=classes_dic_name_id.keys(), columns=paths).to_csv("mean_AUC_ChinaRefinementAll.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_left, index=classes_dic_name_id.keys(), columns=paths).to_csv("left_AUC_ChinaRefinementAll.csv", float_format='%.2f')
+pd.DataFrame(global_roc_auc_right, index=classes_dic_name_id.keys(), columns=paths).to_csv("right_AUC_ChinaRefinementAll.csv", float_format='%.2f')
