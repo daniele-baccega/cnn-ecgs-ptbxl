@@ -52,7 +52,7 @@ for value in SNOMED_dic.values():
 
 classes_dic_name_id["Average"] 				= i
 
-classes_dic = dict()
+classes_dic 								= dict()
 for key, value in classes_dic_name_id.items():
 	classes_dic[value] 						= key
 
@@ -79,22 +79,22 @@ for path in paths:
 			y_test 							= pickle.load(y_test_file)
 
 		#  Plot ROC curves
-		fpr 									= dict()
-		tpr 									= dict()
-		thresholds								= dict()
-		J										= dict()
-		best_thres								= dict()
+		fpr 								= dict()
+		tpr 								= dict()
+		thresholds							= dict()
+		J									= dict()
+		best_thres							= dict()
 
 		for i in range(num_classes):
-			fpr[i], tpr[i], thresholds[i] 		= roc_curve(y_test[:, i], y_pred[:, i])
-			roc_auc_local[i] 					= auc(fpr[i], tpr[i])
-			J[i] 								= tpr[i] - fpr[i]
-			ix 									= np.argmax(J[i])
-			best_thres[i] 						= thresholds[i][ix]
+			fpr[i], tpr[i], thresholds[i] 	= roc_curve(y_test[:, i], y_pred[:, i])
+			roc_auc_local[i] 				= auc(fpr[i], tpr[i])
+			J[i] 							= tpr[i] - fpr[i]
+			ix 								= np.argmax(J[i])
+			best_thres[i] 					= thresholds[i][ix]
 
-		roc_auc_local[num_classes]				= np.mean(roc_auc_local[0:num_classes])
+		roc_auc_local[num_classes]			= np.mean(roc_auc_local[0:num_classes])
 
-		y_pred 									= np.where([[y[i] > thres for i, thres in enumerate(best_thres.values())] for y in y_pred], 1, 0)
+		y_pred 								= np.where([[y[i] > thres for i, thres in enumerate(best_thres.values())] for y in y_pred], 1, 0)
 
 		if first_iteration:
 			roc_auc_mean 					= roc_auc_local
@@ -118,8 +118,8 @@ for path in paths:
 	global_roc_auc_left[:, j]				= roc_auc_left * 100
 	global_roc_auc_right[:, j]				= roc_auc_right * 100
 
-	classes, weights = load_weights("weights_abbreviations_China.csv")
-	challenge_metric = compute_challenge_metric(weights, y_test, y_pred, classes, set(['SNR']))
+	classes, weights 						= load_weights("weights_abbreviations_China.csv")
+	challenge_metric 						= compute_challenge_metric(weights, y_test, y_pred, classes, set(['SNR']))
 
 	print("\nPhysionel Challenge 2021 challenge score: ", challenge_metric)
 

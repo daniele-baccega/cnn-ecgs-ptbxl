@@ -118,7 +118,7 @@ for i in range(len(ecg_filenames)):
       y_data[i][classes_dic[SNOMED_dic[snomed_classes[j]]]] = 1
 
 #  Subsampling and rescale the ecgs
-data = []
+data                                                        = []
 for ecg in ecg_filenames:
   signals, fields                                           = pc.load_challenge_data(ecg)
   signals                                                   = signals.reshape(signals.shape[0], signals.shape[1], 1)
@@ -147,10 +147,10 @@ X_train, y_train, X_test, y_test                            = iterative_train_te
 
 # Load means and stds
 with open('TrainedModels/' + args.scenario + '/means', 'rb') as means_file:
-  means        = pickle.load(means_file)[selected_leads_indeces, :, 0]
+  means                                                     = pickle.load(means_file)[selected_leads_indeces, :, 0]
 
 with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
-  stds        = pickle.load(stds_file)[selected_leads_indeces, :, 0]
+  stds                                                      = pickle.load(stds_file)[selected_leads_indeces, :, 0]
 
 #  Load the model at the last epoch
 model                                                       = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
@@ -197,7 +197,7 @@ history                                                     = model.fit(dataGene
                                                                                       time_scale),
                                                                         steps_per_epoch   = X_train.shape[0] // batch_size,
                                                                         epochs            = epochs,
-                                					validation_data   = dataGenerator(sampling_rate,
+                                					                              validation_data   = dataGenerator(sampling_rate,
                                                                                                           num_classes,
                                                                                                           activation_function,
                                                                                                           means,

@@ -51,7 +51,7 @@ for value in SNOMED_dic.values():
 
 classes_dic_name_id["Average"] 				= i
 
-classes_dic = dict()
+classes_dic 								= dict()
 for key, value in classes_dic_name_id.items():
 	classes_dic[value] 						= key
 

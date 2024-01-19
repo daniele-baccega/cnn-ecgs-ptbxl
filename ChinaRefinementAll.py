@@ -111,153 +111,153 @@ for value in SNOMED_dic.values():
 
 num_classes                                                 = len(classes_dic)
 
-y_data                                    = np.zeros((len(ecg_filenames), num_classes), dtype=int)
+y_data                                                      = np.zeros((len(ecg_filenames), num_classes), dtype=int)
 for i in range(len(ecg_filenames)):
   for j in range(len(snomed_classes)):
     if y[i][j] == 1:
       y_data[i][classes_dic[SNOMED_dic[snomed_classes[j]]]] = 1
 
-data = []
+data                                                        = []
 for ecg in ecg_filenames:
-  signals, fields                         = pc.load_challenge_data(ecg)
-  init                                    = np.random.randint(0, signals.shape[1] - 5000)
-  stop                                    = init + 5000
-  signals                                 = signals[:, init:stop]
-  signals                                 = signals.reshape(signals.shape[0], signals.shape[1], 1)
-  signals                                 = interp1d(signals, int(signals.shape[1] / 5))
-  signals                                 = signals / 100
+  signals, fields                                           = pc.load_challenge_data(ecg)
+  init                                                      = np.random.randint(0, signals.shape[1] - 5000)
+  stop                                                      = init + 5000
+  signals                                                   = signals[:, init:stop]
+  signals                                                   = signals.reshape(signals.shape[0], signals.shape[1], 1)
+  signals                                                   = interp1d(signals, int(signals.shape[1] / 5))
+  signals                                                   = signals / 100
   data.append(signals)
 
-data = np.array(data)
-y_data = np.array(y_data)
+data                                                        = np.array(data)
+y_data                                                      = np.array(y_data)
 
 print("Data shape: ", data.shape)
 print("Labels shape: ", y_data.shape)
 
-leads = ["I", "II", "III", "AVR", "AVL", "AVF", "V1", "V2", "V3", "V4", "V5", "V6"]
+leads                                                       = ["I", "II", "III", "AVR", "AVL", "AVF", "V1", "V2", "V3", "V4", "V5", "V6"]
 
 # Select the leads
-selected_leads_indeces      = [i for i in range(0, len(leads)) if leads[i] in leads_dict[args.scenario]]
-selected_leads_name         = [leads[i] for i in selected_leads_indeces]
+selected_leads_indeces                                      = [i for i in range(0, len(leads)) if leads[i] in leads_dict[args.scenario]]
+selected_leads_name                                         = [leads[i] for i in selected_leads_indeces]
 
-data = data[:, selected_leads_indeces, :]
-data = data.reshape(data.shape[0], data.shape[1], data.shape[2], 1)
+data                                                        = data[:, selected_leads_indeces, :]
+data                                                        = data.reshape(data.shape[0], data.shape[1], data.shape[2], 1)
 
 ## Train/Test split
-X_train, y_train, X_test, y_test = iterative_train_test_split(data, y_data, test_size=test_proportion)
+X_train, y_train, X_test, y_test                            = iterative_train_test_split(data, y_data, test_size=test_proportion)
 
 
 # Load means and stds
 with open('TrainedModels/' + args.scenario + '/means', 'rb') as means_file:
-  means        = pickle.load(means_file)[selected_leads_indeces, :, 0]
+  means                                                     = pickle.load(means_file)[selected_leads_indeces, :, 0]
 
 with open('TrainedModels/' + args.scenario + '/stds', 'rb') as stds_file:
-  stds        = pickle.load(stds_file)[selected_leads_indeces, :, 0]
+  stds                                                      = pickle.load(stds_file)[selected_leads_indeces, :, 0]
 
 #  Load the model at the last epoch
-model = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
-model.trainable = True
+model                                                       = models.load_model(args.path + '/checkpoints/model_last_epoch.h5')
+model.trainable                                             = True
 
 # Specify the loss, optimizer, and metrics with `compile()`.
 model.compile(
-  loss              = BinaryCrossentropy(),
-  optimizer         = Adam(learning_rate=1e-3),
-  metrics           = [BinaryAccuracy()]
+  loss                                                      = BinaryCrossentropy(),
+  optimizer                                                 = Adam(learning_rate=1e-3),
+  metrics                                                   = [BinaryAccuracy()]
 )
 
 model.summary()
 
-sample_weights_train        = np.ones(X_train.shape[0])
-sample_weights_test         = np.ones(X_test.shape[0])
+sample_weights_train                                        = np.ones(X_train.shape[0])
+sample_weights_test                                         = np.ones(X_test.shape[0])
 
 #  Train the model
-history                     = model.fit(dataGenerator(sampling_rate,
-                                                      num_classes,
-                                                      activation_function,
-                                                      means,
-                                                      stds,
-                                                      sample_weights_train,
-                                                      X_train,
-                                                      y_train,
-                                                      batch_size,
-                                                      False,
-                                                      False,
-                                                      False,
-                                                      False,
-                                                      crop_window,
-                                                      0,
-                                                      jitter_std,
-                                                      amplitude_scale,
-                                                      time_scale),
-                                        steps_per_epoch   = X_train.shape[0] // batch_size,
-                                        epochs            = epochs,
-					validation_data   = dataGenerator(sampling_rate,
-                                                                          num_classes,
-                                                                          activation_function,
-                                                                          means,
-                                                                          stds,
-                                                                          sample_weights_test,
-                                                                          X_test,
-                                                                          y_test,
-                                                                          batch_size,
-                                                                          False,
-                                                                          False,
-                                                                          False,
-                                                                          False,
-                                                                          crop_window,
-                                                                          0),
-                                        validation_steps  = X_test.shape[0] // batch_size,
-                                        shuffle           = True,
-                                        workers           = 1,
-                                        verbose           = 1)
+history                                                     = model.fit(dataGenerator(sampling_rate,
+                                                                                      num_classes,
+                                                                                      activation_function,
+                                                                                      means,
+                                                                                      stds,
+                                                                                      sample_weights_train,
+                                                                                      X_train,
+                                                                                      y_train,
+                                                                                      batch_size,
+                                                                                      False,
+                                                                                      False,
+                                                                                      False,
+                                                                                      False,
+                                                                                      crop_window,
+                                                                                      0,
+                                                                                      jitter_std,
+                                                                                      amplitude_scale,
+                                                                                      time_scale),
+                                                                        steps_per_epoch   = X_train.shape[0] // batch_size,
+                                                                        epochs            = epochs,
+					                                                              validation_data   = dataGenerator(sampling_rate,
+                                                                                                          num_classes,
+                                                                                                          activation_function,
+                                                                                                          means,
+                                                                                                          stds,
+                                                                                                          sample_weights_test,
+                                                                                                          X_test,
+                                                                                                          y_test,
+                                                                                                          batch_size,
+                                                                                                          False,
+                                                                                                          False,
+                                                                                                          False,
+                                                                                                          False,
+                                                                                                          crop_window,
+                                                                                                          0),
+                                                                        validation_steps  = X_test.shape[0] // batch_size,
+                                                                        shuffle           = True,
+                                                                        workers           = 1,
+                                                                        verbose           = 1)
 
 #  Save the model at the last epoch
 model.save(args.newpath + "/checkpoints/model_last_epoch.h5")
 
 #  Plot losses and accuracies
-history_df 													= pd.DataFrame(columns=['epoch', 'loss', 'type'])
+history_df 													                        = pd.DataFrame(columns=['epoch', 'loss', 'type'])
 
-history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
-history_df['loss'] 									= np.concatenate((history.history['loss'], history.history['val_loss']))
-history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
+history_df['epoch'] 								                        = np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
+history_df['loss'] 									                        = np.concatenate((history.history['loss'], history.history['val_loss']))
+history_df['type'] 									                        = np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
 
-my_plot_history_loss 								= (ggplot(history_df) \
-																				+ aes(x='epoch', y = 'loss', color = 'type') \
-																				+ geom_line() \
-																				+ labs(title = "Loss", x = 'epoch', y = 'loss', color = 'Type')) \
-																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
-																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
+my_plot_history_loss 								                        = (ggplot(history_df) \
+                                                                + aes(x='epoch', y = 'loss', color = 'type') \
+                                                                + geom_line() \
+                                                                + labs(title = "Loss", x = 'epoch', y = 'loss', color = 'Type')) \
+                                                                + scale_color_manual(values=['#FF0000', '#0000FF']) \
+                                                                + theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
 	
 my_plot_history_loss.save(args.newpath + '/loss', dpi=600)
 
-history_df 													= pd.DataFrame(columns=['epoch', 'accuracy', 'type'])
+history_df 													                        = pd.DataFrame(columns=['epoch', 'accuracy', 'type'])
 
-history_df['epoch'] 								= np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
-history_df['accuracy'] 							= np.concatenate((history.history['binary_accuracy'], history.history['val_binary_accuracy']))
-history_df['type'] 									= np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
+history_df['epoch'] 								                        = np.concatenate((np.linspace(1, epochs, epochs, dtype=int), np.linspace(1, epochs, epochs, dtype=int)))
+history_df['accuracy'] 							                        = np.concatenate((history.history['binary_accuracy'], history.history['val_binary_accuracy']))
+history_df['type'] 									                        = np.concatenate((["Train" for e in range(epochs)], ["Val" for e in range(epochs)]))
 
-my_plot_history_accuracy 						= (ggplot(history_df) \
-																				+ aes(x='epoch', y = 'accuracy', color = 'type') \
-																				+ geom_line() \
-																				+ labs(title = "Accuracy", x = 'epoch', y = 'accuracy', color = 'Type')) \
-																				+ scale_color_manual(values=['#FF0000', '#0000FF']) \
-																				+ theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
+my_plot_history_accuracy 						                        = (ggplot(history_df) \
+                                                                + aes(x='epoch', y = 'accuracy', color = 'type') \
+                                                                + geom_line() \
+                                                                + labs(title = "Accuracy", x = 'epoch', y = 'accuracy', color = 'Type')) \
+                                                                + scale_color_manual(values=['#FF0000', '#0000FF']) \
+                                                                + theme(plot_title = element_text(face="bold"), axis_title_x  = element_text(face="bold"), axis_title_y = element_text(face="bold"), legend_title = element_text(face="bold"))
 	
 my_plot_history_accuracy.save(args.newpath + '/accuracy', dpi=600)
 
 #  Predict the labels of the data inside the test set and save the predictions
-y_pred                      = model.predict(dataGenerator(sampling_rate,
-							                                            num_classes,
-                                                          activation_function,
-                                                          means,
-                                                          stds,
-                                                          sample_weights_test,
-                                                          X_test,
-                                                          y_test,
-                                                          1),
-                                            steps   = X_test.shape[0],
-                                            workers = 1,
-                                            verbose = 1)
+y_pred                                                      = model.predict(dataGenerator(sampling_rate,
+							                                                                            num_classes,
+                                                                                          activation_function,
+                                                                                          means,
+                                                                                          stds,
+                                                                                          sample_weights_test,
+                                                                                          X_test,
+                                                                                          y_test,
+                                                                                          1),
+                                                                            steps   = X_test.shape[0],
+                                                                            workers = 1,
+                                                                            verbose = 1)
 
 #  Save the predictions
 with open(args.newpath + '/y_pred_China', 'wb') as y_pred_file:
