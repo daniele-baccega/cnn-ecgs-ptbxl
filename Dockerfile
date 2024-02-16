@@ -18,7 +18,7 @@ COPY tf-gpu.yml tf-gpu.yml
 
 RUN conda env create -f tf-gpu.yml
 
-# Create prophet-forecasting directory
+# Create cnn-ecg directory
 RUN mkdir /home/docker; chmod -R 777 /home/docker
 RUN mkdir /home/docker/cnn-ecg; chmod 777 /home/docker/cnn-ecg
 
