@@ -192,7 +192,7 @@ if not os.path.exists('../means') or not os.path.exists('../stds'):
   stds                        = np.zeros((leads, samples, 1))
   first_ecg                   = True
 
-  for j, x in zip(range(samples), X_train):
+  for j, x in zip(range(X_train.shape[0]), X_train):
     for i, lead in zip(range(leads), x):
       counter                 = j + 1
 
