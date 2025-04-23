@@ -54,7 +54,7 @@ We tested the docker on the following GPUs: NVIDIA GeForce 1080, NVIDIA GeForce 
 [6] Attia, Z. I., Noseworthy, P. A., Lopez-Jimenez, F., Asirvatham, S. J., Deshmukh, A. J., Gersh, B. J., et al. (2019b). An artificial intelligence-enabled ecg algorithm for the identification of patients with atrial fibrillation during sinus rhythm: a retrospective analysis of outcome prediction. The Lancet 394, 861–867
 
 ## COPYRIGHT AND LICENSE
-Copyright _Daniele Baccega, Andrea Saglietto, Attilio Fiandrotti, Roberto Esposito_
+Copyright _Andrea Saglietto, Daniele Baccega, Roberto Esposito, Matteo Anselmino, Veronica Dusi, Attilio Fiandrotti, Gaetano Maria De Ferrari_
 
 ![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
 
