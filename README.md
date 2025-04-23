@@ -4,7 +4,7 @@ The 12-lead electrocardiogram (ECG) is a fundamental instrument for diagnosing c
 
 Such methods proved capable of recognizing specific patterns and abnormalities in ECG waveforms invisible to the human eye, e.g. detecting cardiac contractile dysfunction from an “apparently” normal ECG [5] or the presence of an underlying atrial fibrillation from a sinus rhythm ECG [6]. Altogether, these findings highlight the potential of an AI-based ECG analysis, with significant implications for early detection and management of different cardiac abnormalities.
 
-This work aims at assessing whether an AI is capable of identifying in a single lead cardiac abnormalities that are typically diagnosed from standard 12-lead ECGs.
+This work [7] aims at assessing whether an AI is capable of identifying in a single lead cardiac abnormalities that are typically diagnosed from standard 12-lead ECGs.
 The potential outcomes of this point are significant: if an AI would be able to detect cardiac abnormalities in single-lead ECGs, that would be a strong incentive towards integrating diagnostic AIs into wearable devices.
 The perspective of single-lead ECGs diagnoses on wearable devices would be game-changer, as it would allow for frequent, accessible and economic screening for large masses of population for both cardiovascular and non-cardiovascular diseases. 
 
@@ -52,6 +52,8 @@ We tested the docker on the following GPUs: NVIDIA GeForce 1080, NVIDIA GeForce 
 [5] Attia, Z. I., Kapa, S., Lopez-Jimenez, F., McKie, P. M., Ladewig, D. J., Satam, G., et al. (2019a). Screening for cardiac contractile dysfunction using an artificial intelligence–enabled electrocardiogram. Nature medicine 25, 70–74
 
 [6] Attia, Z. I., Noseworthy, P. A., Lopez-Jimenez, F., Asirvatham, S. J., Deshmukh, A. J., Gersh, B. J., et al. (2019b). An artificial intelligence-enabled ecg algorithm for the identification of patients with atrial fibrillation during sinus rhythm: a retrospective analysis of outcome prediction. The Lancet 394, 861–867
+
+[7] Saglietto A, Baccega D, Esposito R, Anselmino M, Dusi V, Fiandrotti A and De Ferrari GM (2024) Convolutional neural network (CNN)-enabled electrocardiogram (ECG) analysis: a comparison between standard twelve-lead and single-lead setups. Front. Cardiovasc. Med. 11:1327179. doi: 10.3389/fcvm.2024.1327179
 
 ## COPYRIGHT AND LICENSE
 Copyright _Andrea Saglietto, Daniele Baccega, Roberto Esposito, Matteo Anselmino, Veronica Dusi, Attilio Fiandrotti, Gaetano Maria De Ferrari_
